@@ -1,0 +1,226 @@
+{
+	"groups": [
+		{
+			"keys": "checkbox_select_disabled_png,checkbox_select_down_png,checkbox_select_up_png,checkbox_unselect_png,selected_png,border_png,header_png,radiobutton_select_disabled_png,radiobutton_select_down_png,radiobutton_select_up_png,radiobutton_unselect_png,roundthumb_png,thumb_png,track_png,tracklight_png,handle_png,off_png,on_png,button_down_png,button_up_png,thumb_pb_png,track_pb_png,track_sb_png,description_json,facebooklogo_png,goon_png,over_jpg,restart_png,IReturn_png,rules_png,startBg_jpg,startButton_png,bbb_json,bbb_png,bg_jpg,bul1_png,bul2_png,enemy1_png,enemy2_png,enemy3_png,enemybul_png,myplane_png,score_json",
+			"name": "preload"
+		}
+	],
+	"resources": [
+		{
+			"url": "assets/CheckBox/checkbox_select_disabled.png",
+			"type": "image",
+			"name": "checkbox_select_disabled_png"
+		},
+		{
+			"url": "assets/CheckBox/checkbox_select_down.png",
+			"type": "image",
+			"name": "checkbox_select_down_png"
+		},
+		{
+			"url": "assets/CheckBox/checkbox_select_up.png",
+			"type": "image",
+			"name": "checkbox_select_up_png"
+		},
+		{
+			"url": "assets/CheckBox/checkbox_unselect.png",
+			"type": "image",
+			"name": "checkbox_unselect_png"
+		},
+		{
+			"url": "assets/ItemRenderer/selected.png",
+			"type": "image",
+			"name": "selected_png"
+		},
+		{
+			"url": "assets/Panel/border.png",
+			"type": "image",
+			"name": "border_png"
+		},
+		{
+			"url": "assets/Panel/header.png",
+			"type": "image",
+			"name": "header_png"
+		},
+		{
+			"url": "assets/RadioButton/radiobutton_select_disabled.png",
+			"type": "image",
+			"name": "radiobutton_select_disabled_png"
+		},
+		{
+			"url": "assets/RadioButton/radiobutton_select_down.png",
+			"type": "image",
+			"name": "radiobutton_select_down_png"
+		},
+		{
+			"url": "assets/RadioButton/radiobutton_select_up.png",
+			"type": "image",
+			"name": "radiobutton_select_up_png"
+		},
+		{
+			"url": "assets/RadioButton/radiobutton_unselect.png",
+			"type": "image",
+			"name": "radiobutton_unselect_png"
+		},
+		{
+			"url": "assets/ScrollBar/roundthumb.png",
+			"type": "image",
+			"name": "roundthumb_png"
+		},
+		{
+			"url": "assets/Slider/thumb.png",
+			"type": "image",
+			"name": "thumb_png"
+		},
+		{
+			"url": "assets/Slider/track.png",
+			"type": "image",
+			"name": "track_png"
+		},
+		{
+			"url": "assets/Slider/tracklight.png",
+			"type": "image",
+			"name": "tracklight_png"
+		},
+		{
+			"url": "assets/ToggleSwitch/handle.png",
+			"type": "image",
+			"name": "handle_png"
+		},
+		{
+			"url": "assets/ToggleSwitch/off.png",
+			"type": "image",
+			"name": "off_png"
+		},
+		{
+			"url": "assets/ToggleSwitch/on.png",
+			"type": "image",
+			"name": "on_png"
+		},
+		{
+			"url": "assets/Button/button_down.png",
+			"type": "image",
+			"name": "button_down_png"
+		},
+		{
+			"url": "assets/Button/button_up.png",
+			"type": "image",
+			"name": "button_up_png"
+		},
+		{
+			"url": "assets/ProgressBar/thumb_pb.png",
+			"type": "image",
+			"name": "thumb_pb_png"
+		},
+		{
+			"url": "assets/ProgressBar/track_pb.png",
+			"type": "image",
+			"name": "track_pb_png"
+		},
+		{
+			"url": "assets/ScrollBar/track_sb.png",
+			"type": "image",
+			"name": "track_sb_png"
+		},
+		{
+			"name": "description_json",
+			"type": "json",
+			"url": "config/description.json"
+		},
+		{
+			"name": "facebooklogo_png",
+			"type": "image",
+			"url": "assets/game/over/facebooklogo.png"
+		},
+		{
+			"name": "goon_png",
+			"type": "image",
+			"url": "assets/game/over/goon.png"
+		},
+		{
+			"name": "over_jpg",
+			"type": "image",
+			"url": "assets/game/over/over.jpg"
+		},
+		{
+			"name": "restart_png",
+			"type": "image",
+			"url": "assets/game/over/restart.png"
+		},
+		{
+			"name": "IReturn_png",
+			"type": "image",
+			"url": "assets/game/start/IReturn.png"
+		},
+		{
+			"name": "rules_png",
+			"type": "image",
+			"url": "assets/game/start/rules.png"
+		},
+		{
+			"name": "startBg_jpg",
+			"type": "image",
+			"url": "assets/game/start/startBg.jpg"
+		},
+		{
+			"name": "startButton_png",
+			"type": "image",
+			"url": "assets/game/start/startButton.png"
+		},
+		{
+			"name": "bbb_json",
+			"type": "json",
+			"url": "assets/game/bbb.json"
+		},
+		{
+			"name": "bbb_png",
+			"type": "image",
+			"url": "assets/game/bbb.png"
+		},
+		{
+			"name": "bg_jpg",
+			"type": "image",
+			"url": "assets/game/bg.jpg"
+		},
+		{
+			"name": "bul1_png",
+			"type": "image",
+			"url": "assets/game/bul1.png"
+		},
+		{
+			"name": "bul2_png",
+			"type": "image",
+			"url": "assets/game/bul2.png"
+		},
+		{
+			"name": "enemy1_png",
+			"type": "image",
+			"url": "assets/game/enemy1.png"
+		},
+		{
+			"name": "enemy2_png",
+			"type": "image",
+			"url": "assets/game/enemy2.png"
+		},
+		{
+			"name": "enemy3_png",
+			"type": "image",
+			"url": "assets/game/enemy3.png"
+		},
+		{
+			"name": "enemybul_png",
+			"type": "image",
+			"url": "assets/game/enemybul.png"
+		},
+		{
+			"name": "myplane_png",
+			"type": "image",
+			"url": "assets/game/myplane.png"
+		},
+		{
+			"name": "score_json",
+			"type": "sheet",
+			"url": "assets/game/start/score.json",
+			"subkeys": "imgFont5,imgFont6,imgFont7,imgFont8,imgFont9,imgFont0,imgFont1,imgFont2,imgFont3,imgFont4"
+		}
+	]
+}
