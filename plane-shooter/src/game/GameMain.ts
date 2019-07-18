@@ -7,6 +7,7 @@ class GameMain extends egret.DisplayObjectContainer {
 	private enemyPlane: AirPlane[] = [];
 	private enemyPlaneTimer: egret.Timer = new egret.Timer(1000);
 	private bombMc: egret.MovieClip;
+	private myScore: number;
 
 	public constructor() {
 		super();
@@ -21,10 +22,11 @@ class GameMain extends egret.DisplayObjectContainer {
 	private createMain() {
 		SceneManager.addScene(SceneManager.instance._gameMap, this);
 
-		this.myPlane = new AirPlane(RES.getRes("myplane_png"), 200, "myplane_png", Constant.myPlaneScale);
+		this.myPlane = new AirPlane(RES.getRes("myplane_png"), 400, "myplane_png", Constant.myPlaneScale);
 		this.myPlane.x = (Constant.stageW - this.myPlane.width) / 2;
 		this.myPlane.y = Constant.stageH - 120;
 		this.addChild(this.myPlane);
+		this.myScore = 0;
 
 		this.initBomb();
 		this.initEvent();
@@ -75,7 +77,16 @@ class GameMain extends egret.DisplayObjectContainer {
 	 * 产生敌机
 	 */
 	private createEnemy(event: egret.TimerEvent) {
-		let enemy: AirPlane = AirPlane.produce("enemy1_png", 1000);
+		let enemy: AirPlane;
+		let num = Math.random();
+		if (num <= 0.5) {
+			enemy = AirPlane.produce("enemy1_png", 1000);
+		} else if (num > 0.5 && num < 0.8) {
+			enemy = AirPlane.produce("enemy2_png", 800);
+		} else {
+			enemy = AirPlane.produce("enemy3_png", 500);
+		}
+
 		enemy.x = Math.random() * (Constant.stageW - enemy.width);
 		enemy.y = -enemy.height - Math.random() * 300;
 		enemy.addEventListener(Constant.createBullet, this.createBulletHandler, this);
@@ -85,6 +96,9 @@ class GameMain extends egret.DisplayObjectContainer {
 		this.enemyPlane.push(enemy);
 	}
 
+	/**
+	 * 产生子弹
+	 */
 	private createBulletHandler(event: egret.Event) {
 		let bullet: Bullet;
 		if (event.target == this.myPlane) {
@@ -98,7 +112,7 @@ class GameMain extends egret.DisplayObjectContainer {
 		} else {
 			let enemy: AirPlane = event.target;
 			bullet = Bullet.produce("enemybul_png");
-			bullet.x = enemy.x + enemy.width / 2 - bullet.width / 2;
+			bullet.x = enemy.x + enemy.width / 2 - 6;
 			bullet.y = enemy.y + enemy.height + 10;
 			this.addChildAt(bullet, this.numChildren - 1 - this.enemyPlane.length);
 			this.enemyBullets.push(bullet);
@@ -174,7 +188,10 @@ class GameMain extends egret.DisplayObjectContainer {
 				if (SceneManager.hitTest(bul, enemy)) {
 					try {
 						this.bomb(this.bombMc, enemy.x, enemy.y);
+						this.playBombAudio("enemydie_mp3");
 						this.removeChild(enemy);
+						//击中 加分
+						this.myScore++;
 					} catch (error) {
 						console.log(error);
 					}
@@ -202,9 +219,11 @@ class GameMain extends egret.DisplayObjectContainer {
 					this.myPlane.blood -= 10;
 					console.log(this.myPlane.blood);
 					if (this.myPlane.blood <= 0) {
+						this.playBombAudio("gameover_mp3");
 						this.gameStop();
 						setTimeout(() => {
 							SceneManager.switchScene(SceneManager.instance._gameScore);
+							SceneManager.instance._gameScore.setScore(this.myScore);
 						}, 1000);
 					}
 					return;
@@ -229,5 +248,10 @@ class GameMain extends egret.DisplayObjectContainer {
 		mc1.y = y;
 		this.addChild(mc1);
 		mc1.gotoAndPlay(1);
+	}
+
+	private playBombAudio(resName: string) {
+		var sound: egret.Sound = RES.getRes(resName);
+		sound.play(0, 1);
 	}
 }

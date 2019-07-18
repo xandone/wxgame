@@ -16,6 +16,8 @@ class Constant {
 
     static myBulletS_1: number = 0.5;
 
+    static scoreNum: number = 0.5;
+
     static createBullet: string = "createBullet";
 
 }

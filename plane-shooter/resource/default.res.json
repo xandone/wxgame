@@ -1,7 +1,7 @@
 {
 	"groups": [
 		{
-			"keys": "checkbox_select_disabled_png,checkbox_select_down_png,checkbox_select_up_png,checkbox_unselect_png,selected_png,border_png,header_png,radiobutton_select_disabled_png,radiobutton_select_down_png,radiobutton_select_up_png,radiobutton_unselect_png,roundthumb_png,thumb_png,track_png,tracklight_png,handle_png,off_png,on_png,button_down_png,button_up_png,thumb_pb_png,track_pb_png,track_sb_png,description_json,facebooklogo_png,goon_png,over_jpg,restart_png,IReturn_png,rules_png,startBg_jpg,startButton_png,bbb_json,bbb_png,bg_jpg,bul1_png,bul2_png,enemy1_png,enemy2_png,enemy3_png,enemybul_png,myplane_png,score_json",
+			"keys": "checkbox_select_disabled_png,checkbox_select_down_png,checkbox_select_up_png,checkbox_unselect_png,selected_png,border_png,header_png,radiobutton_select_disabled_png,radiobutton_select_down_png,radiobutton_select_up_png,radiobutton_unselect_png,roundthumb_png,thumb_png,track_png,tracklight_png,handle_png,off_png,on_png,button_down_png,button_up_png,thumb_pb_png,track_pb_png,track_sb_png,description_json,facebooklogo_png,goon_png,over_jpg,restart_png,IReturn_png,rules_png,startBg_jpg,startButton_png,bbb_json,bbb_png,bg_jpg,bul1_png,bul2_png,enemy1_png,enemy2_png,enemy3_png,enemybul_png,myplane_png,score_json,enemydie_mp3,gameover_mp3,menu_mp3,hornOff_png,hornOn_png",
 			"name": "preload"
 		}
 	],
@@ -221,6 +221,31 @@
 			"type": "sheet",
 			"url": "assets/game/start/score.json",
 			"subkeys": "imgFont5,imgFont6,imgFont7,imgFont8,imgFont9,imgFont0,imgFont1,imgFont2,imgFont3,imgFont4"
+		},
+		{
+			"name": "enemydie_mp3",
+			"type": "sound",
+			"url": "assets/game/audio/enemydie.mp3"
+		},
+		{
+			"name": "gameover_mp3",
+			"type": "sound",
+			"url": "assets/game/audio/gameover.mp3"
+		},
+		{
+			"name": "menu_mp3",
+			"type": "sound",
+			"url": "assets/game/audio/menu.mp3"
+		},
+		{
+			"name": "hornOff_png",
+			"type": "image",
+			"url": "assets/game/start/hornOff.png"
+		},
+		{
+			"name": "hornOn_png",
+			"type": "image",
+			"url": "assets/game/start/hornOn.png"
 		}
 	]
 }

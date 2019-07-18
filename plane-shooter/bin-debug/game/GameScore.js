@@ -19,26 +19,23 @@ var GameScore = (function (_super) {
     GameScore.prototype.init = function () {
         this.removeEventListener(eui.UIEvent.CREATION_COMPLETE, this.init, this);
         this.restart_btn.addEventListener(egret.TouchEvent.TOUCH_TAP, this.restart, this);
-        this.setScore(103);
     };
     GameScore.prototype.restart = function () {
         SceneManager.switchScene(SceneManager.instance._gameMain);
         SceneManager.instance._gameMain.restart();
     };
     GameScore.prototype.setScore = function (num) {
-        this.myGroup = new eui.Group();
-        this.addChild(this.myGroup);
+        this.myGroup.removeChildren();
         this.myGroup.layout = new eui.BasicLayout();
-        this.myGroup.width = 374;
-        this.myGroup.height = 80;
-        this.myGroup.x = 56;
-        this.myGroup.y = 496;
         var arr = this.digitize(num);
         for (var i = 0; i < arr.length; i++) {
-            this.myGroup.addChild(new egret.Bitmap(RES.getRes("score_json.imgFont" + arr[i])));
+            var score = new eui.Image(RES.getRes("score_json.imgFont" + arr[i]));
+            score.scaleX = Constant.scoreNum;
+            score.scaleY = Constant.scoreNum;
+            this.myGroup.addChild(score);
         }
         var hLayout = new eui.HorizontalLayout();
-        hLayout.gap = 10;
+        hLayout.paddingTop = 20;
         hLayout.horizontalAlign = egret.HorizontalAlign.CENTER;
         this.myGroup.layout = hLayout; /// 水平布局
     };

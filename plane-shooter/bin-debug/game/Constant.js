@@ -8,6 +8,7 @@ var Constant = (function () {
     Constant.myPlaneScale = 0.5;
     Constant.enemyBulletS_1 = 0.5;
     Constant.myBulletS_1 = 0.5;
+    Constant.scoreNum = 0.5;
     Constant.createBullet = "createBullet";
     return Constant;
 }());

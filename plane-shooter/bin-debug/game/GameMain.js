@@ -25,10 +25,11 @@ var GameMain = (function (_super) {
     };
     GameMain.prototype.createMain = function () {
         SceneManager.addScene(SceneManager.instance._gameMap, this);
-        this.myPlane = new AirPlane(RES.getRes("myplane_png"), 200, "myplane_png", Constant.myPlaneScale);
+        this.myPlane = new AirPlane(RES.getRes("myplane_png"), 400, "myplane_png", Constant.myPlaneScale);
         this.myPlane.x = (Constant.stageW - this.myPlane.width) / 2;
         this.myPlane.y = Constant.stageH - 120;
         this.addChild(this.myPlane);
+        this.myScore = 0;
         this.initBomb();
         this.initEvent();
         this.gameStart();
@@ -73,7 +74,17 @@ var GameMain = (function (_super) {
      * 产生敌机
      */
     GameMain.prototype.createEnemy = function (event) {
-        var enemy = AirPlane.produce("enemy1_png", 1000);
+        var enemy;
+        var num = Math.random();
+        if (num <= 0.5) {
+            enemy = AirPlane.produce("enemy1_png", 1000);
+        }
+        else if (num > 0.5 && num < 0.8) {
+            enemy = AirPlane.produce("enemy2_png", 800);
+        }
+        else {
+            enemy = AirPlane.produce("enemy3_png", 500);
+        }
         enemy.x = Math.random() * (Constant.stageW - enemy.width);
         enemy.y = -enemy.height - Math.random() * 300;
         enemy.addEventListener(Constant.createBullet, this.createBulletHandler, this);
@@ -81,6 +92,9 @@ var GameMain = (function (_super) {
         this.addChildAt(enemy, this.numChildren - 1);
         this.enemyPlane.push(enemy);
     };
+    /**
+     * 产生子弹
+     */
     GameMain.prototype.createBulletHandler = function (event) {
         var bullet;
         if (event.target == this.myPlane) {
@@ -95,13 +109,14 @@ var GameMain = (function (_super) {
         else {
             var enemy = event.target;
             bullet = Bullet.produce("enemybul_png");
-            bullet.x = enemy.x + enemy.width / 2 - bullet.width / 2;
+            bullet.x = enemy.x + enemy.width / 2 - 6;
             bullet.y = enemy.y + enemy.height + 10;
             this.addChildAt(bullet, this.numChildren - 1 - this.enemyPlane.length);
             this.enemyBullets.push(bullet);
         }
     };
     GameMain.prototype.updateGameView = function () {
+        var _this = this;
         var nowTime = egret.getTimer();
         var fps = 1000 / (nowTime - this._lastTime);
         this._lastTime = nowTime;
@@ -166,7 +181,10 @@ var GameMain = (function (_super) {
                 if (SceneManager.hitTest(bul, enemy)) {
                     try {
                         this.bomb(this.bombMc, enemy.x, enemy.y);
+                        this.playBombAudio("enemydie_mp3");
                         this.removeChild(enemy);
+                        //击中 加分
+                        this.myScore++;
                     }
                     catch (error) {
                         console.log(error);
@@ -193,9 +211,11 @@ var GameMain = (function (_super) {
                     this.myPlane.blood -= 10;
                     console.log(this.myPlane.blood);
                     if (this.myPlane.blood <= 0) {
+                        this.playBombAudio("gameover_mp3");
                         this.gameStop();
                         setTimeout(function () {
                             SceneManager.switchScene(SceneManager.instance._gameScore);
+                            SceneManager.instance._gameScore.setScore(_this.myScore);
                         }, 1000);
                     }
                     return;
@@ -218,6 +238,10 @@ var GameMain = (function (_super) {
         mc1.y = y;
         this.addChild(mc1);
         mc1.gotoAndPlay(1);
+    };
+    GameMain.prototype.playBombAudio = function (resName) {
+        var sound = RES.getRes(resName);
+        sound.play(0, 1);
     };
     return GameMain;
 }(egret.DisplayObjectContainer));
