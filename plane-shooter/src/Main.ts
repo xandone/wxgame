@@ -62,6 +62,7 @@ class Main extends eui.UILayer {
         const result = await RES.getResAsync("description_json")
         await platform.login();
         const userInfo = await platform.getUserInfo();
+        Constant.userInfo = userInfo;
         console.log(userInfo);
 
     }
@@ -100,6 +101,13 @@ class Main extends eui.UILayer {
     protected createGameScene(): void {
         Constant.stageW = this.width;
         Constant.stageH = this.height;
+
+        //加载资源
+        const platform: any = window.platform;
+        platform.openDataContext.postMessage({
+            command: 'loadRes'
+        });
+
 
         SceneManager.instance.setStage(this);
         SceneManager.addScene(SceneManager.instance._gameStart);

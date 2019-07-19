@@ -82,12 +82,12 @@ class GameMain extends egret.DisplayObjectContainer {
 		let num = Math.random();
 		if (num <= 0.5) {
 			enemy = AirPlane.produce("enemy1_png", 1000, 3);
-			//50%概率产生奖品
-			this.createAward();
 		} else if (num > 0.5 && num < 0.8) {
 			enemy = AirPlane.produce("enemy2_png", 800, 5);
 		} else {
 			enemy = AirPlane.produce("enemy3_png", 500, 4);
+			//20%概率产生奖品
+			this.createAward();
 		}
 
 		enemy.x = Math.random() * (Constant.stageW - enemy.width);

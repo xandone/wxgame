@@ -13,3 +13,4 @@ var Constant = (function () {
     return Constant;
 }());
 __reflect(Constant.prototype, "Constant");
+//# sourceMappingURL=Constant.js.map

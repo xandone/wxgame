@@ -114,6 +114,7 @@ var Main = (function (_super) {
                         return [4 /*yield*/, platform.getUserInfo()];
                     case 4:
                         userInfo = _a.sent();
+                        Constant.userInfo = userInfo && userInfo[0];
                         console.log(userInfo);
                         return [2 /*return*/];
                 }
@@ -167,6 +168,11 @@ var Main = (function (_super) {
     Main.prototype.createGameScene = function () {
         Constant.stageW = this.width;
         Constant.stageH = this.height;
+        //加载资源
+        var platform = window.platform;
+        platform.openDataContext.postMessage({
+            command: 'loadRes'
+        });
         SceneManager.instance.setStage(this);
         SceneManager.addScene(SceneManager.instance._gameStart);
     };
@@ -183,3 +189,4 @@ var Main = (function (_super) {
     return Main;
 }(eui.UILayer));
 __reflect(Main.prototype, "Main");
+//# sourceMappingURL=Main.js.map

@@ -1,7 +1,7 @@
 {
 	"groups": [
 		{
-			"keys": "checkbox_select_disabled_png,checkbox_select_down_png,checkbox_select_up_png,checkbox_unselect_png,selected_png,border_png,header_png,radiobutton_select_disabled_png,radiobutton_select_down_png,radiobutton_select_up_png,radiobutton_unselect_png,roundthumb_png,thumb_png,track_png,tracklight_png,handle_png,off_png,on_png,button_down_png,button_up_png,thumb_pb_png,track_pb_png,track_sb_png,description_json,facebooklogo_png,goon_png,over_jpg,restart_png,IReturn_png,rules_png,startBg_jpg,startButton_png,bbb_json,bbb_png,bg_jpg,bul1_png,bul2_png,enemy1_png,enemy2_png,enemy3_png,enemybul_png,myplane_png,score_json,enemydie_mp3,gameover_mp3,menu_mp3,hornOff_png,hornOn_png,bulletAward_png,about_jpg",
+			"keys": "checkbox_select_disabled_png,checkbox_select_down_png,checkbox_select_up_png,checkbox_unselect_png,selected_png,border_png,header_png,radiobutton_select_disabled_png,radiobutton_select_down_png,radiobutton_select_up_png,radiobutton_unselect_png,roundthumb_png,thumb_png,track_png,tracklight_png,handle_png,off_png,on_png,button_down_png,button_up_png,thumb_pb_png,track_pb_png,track_sb_png,description_json,facebooklogo_png,goon_png,over_jpg,restart_png,IReturn_png,rules_png,startBg_jpg,startButton_png,bbb_json,bbb_png,bg_jpg,bul1_png,bul2_png,enemy1_png,enemy2_png,enemy3_png,enemybul_png,myplane_png,score_json,enemydie_mp3,gameover_mp3,menu_mp3,hornOff_png,hornOn_png,bulletAward_png,about_jpg,ranking_png",
 			"name": "preload"
 		}
 	],
@@ -256,6 +256,11 @@
 			"name": "about_jpg",
 			"type": "image",
 			"url": "assets/game/about.jpg"
+		},
+		{
+			"name": "ranking_png",
+			"type": "image",
+			"url": "assets/game/start/ranking.png"
 		}
 	]
 }

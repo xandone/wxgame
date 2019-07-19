@@ -50,3 +50,4 @@ var GameScore = (function (_super) {
     return GameScore;
 }(eui.Component));
 __reflect(GameScore.prototype, "GameScore");
+//# sourceMappingURL=GameScore.js.map

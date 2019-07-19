@@ -20,4 +20,6 @@ class Constant {
 
     static createBullet: string = "createBullet";
 
+    static userInfo: any;
+
 }

@@ -64,3 +64,4 @@ var AirPlane = (function (_super) {
     return AirPlane;
 }(egret.DisplayObjectContainer));
 __reflect(AirPlane.prototype, "AirPlane");
+//# sourceMappingURL=AirPlane.js.map

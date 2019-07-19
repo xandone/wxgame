@@ -46,3 +46,4 @@ var Bullet = (function (_super) {
     return Bullet;
 }(egret.Bitmap));
 __reflect(Bullet.prototype, "Bullet");
+//# sourceMappingURL=Bullet.js.map
