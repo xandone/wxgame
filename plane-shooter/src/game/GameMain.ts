@@ -5,6 +5,7 @@ class GameMain extends egret.DisplayObjectContainer {
 	private _lastTime: number;
 	private enemyBullets: Bullet[] = [];
 	private enemyPlane: AirPlane[] = [];
+	private award: Bullet[] = [];
 	private enemyPlaneTimer: egret.Timer = new egret.Timer(1000);
 	private bombMc: egret.MovieClip;
 	private myScore: number;
@@ -80,11 +81,13 @@ class GameMain extends egret.DisplayObjectContainer {
 		let enemy: AirPlane;
 		let num = Math.random();
 		if (num <= 0.5) {
-			enemy = AirPlane.produce("enemy1_png", 1000);
+			enemy = AirPlane.produce("enemy1_png", 1000, 3);
+			//50%概率产生奖品
+			this.createAward();
 		} else if (num > 0.5 && num < 0.8) {
-			enemy = AirPlane.produce("enemy2_png", 800);
+			enemy = AirPlane.produce("enemy2_png", 800, 5);
 		} else {
-			enemy = AirPlane.produce("enemy3_png", 500);
+			enemy = AirPlane.produce("enemy3_png", 500, 4);
 		}
 
 		enemy.x = Math.random() * (Constant.stageW - enemy.width);
@@ -102,9 +105,12 @@ class GameMain extends egret.DisplayObjectContainer {
 	private createBulletHandler(event: egret.Event) {
 		let bullet: Bullet;
 		if (event.target == this.myPlane) {
-			for (let i: number = 0; i < 2; i++) {
+			let minX = this.myPlane.x - 10;
+			let maxX = this.myPlane.x + this.myPlane.width - 2;
+			for (let i: number = 0; i < this.myPlane.awardCount + 2; i++) {
+				let area = (maxX - minX) / (this.myPlane.awardCount + 3);
 				bullet = Bullet.produce("bul1_png");
-				bullet.x = i == 0 ? (this.myPlane.x + 10) : (this.myPlane.x + this.myPlane.width - 22);
+				bullet.x = minX + area * (i + 1);
 				bullet.y = this.myPlane.y - 10;
 				this.addChildAt(bullet, this.numChildren - 1 - this.enemyPlane.length);
 				this.myBullets.push(bullet);
@@ -119,6 +125,21 @@ class GameMain extends egret.DisplayObjectContainer {
 		}
 	}
 
+	/**
+	 * 产生奖品
+	 */
+	private createAward() {
+		let bullet: Bullet;
+		bullet = Bullet.produce("bulletAward_png");
+		bullet.x = Math.random() * (Constant.stageW - bullet.width);
+		bullet.y = -bullet.height - Math.random() * 300;
+		this.addChildAt(bullet, this.numChildren - 1);
+		this.award.push(bullet);
+	}
+
+	/**
+	 * 每帧更新
+	 */
 	private updateGameView() {
 		let nowTime: number = egret.getTimer();
 		let fps: number = 1000 / (nowTime - this._lastTime);
@@ -159,7 +180,7 @@ class GameMain extends egret.DisplayObjectContainer {
 				i--;
 				enemyLen--;
 			}
-			enemy.y += 4 * speedOffset;
+			enemy.y += enemy.speed * speedOffset;
 		}
 
 		// 敌机子弹
@@ -179,6 +200,25 @@ class GameMain extends egret.DisplayObjectContainer {
 			}
 			bul.y += 6 * speedOffset;
 		}
+
+		// 奖品运动
+		let awardLen = this.award.length
+		for (let i: number = 0; i < awardLen; i++) {
+			let oneAward: Bullet = this.award[i];
+			if (oneAward.y > Constant.stageH) {
+				try {
+					this.removeChild(oneAward);
+				} catch (error) {
+
+				}
+				Bullet.destroy(oneAward);
+				this.award.splice(i, 1);
+				i--;
+				awardLen--;
+			}
+			oneAward.y += 4 * speedOffset;
+		}
+
 
 		// 判断是否击中敌机
 		for (let i: number = 0; i < len; i++) {
@@ -217,16 +257,37 @@ class GameMain extends egret.DisplayObjectContainer {
 					i--;
 					this.bomb(this.bombMc, this.myPlane.x, this.myPlane.y);
 					this.myPlane.blood -= 10;
+					if (this.myPlane.awardCount > 0) {
+						this.myPlane.awardCount--;
+					}
 					console.log(this.myPlane.blood);
 					if (this.myPlane.blood <= 0) {
-						this.playBombAudio("gameover_mp3");
 						this.gameStop();
+						this.playBombAudio("gameover_mp3");
 						setTimeout(() => {
 							SceneManager.switchScene(SceneManager.instance._gameScore);
 							SceneManager.instance._gameScore.setScore(this.myScore);
 						}, 1000);
 					}
 					return;
+				} catch (error) {
+
+				}
+			}
+		}
+
+		// 判断是否获取奖品
+		for (let i: number = 0; i < awardLen; i++) {
+			let oneAward: Bullet = this.award[i];
+			if (SceneManager.hitTest(oneAward, this.myPlane)) {
+				try {
+					this.removeChild(oneAward);
+					Bullet.destroy(oneAward);
+					this.award.splice(i, 1);
+					i--;
+					if (this.myPlane.awardCount < 3) {
+						this.myPlane.awardCount++;
+					}
 				} catch (error) {
 
 				}

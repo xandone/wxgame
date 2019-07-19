@@ -1,6 +1,8 @@
 class GameStart extends eui.Component {
     private start_btn: eui.Button;
+    private about_btn: eui.Button;
     private hornGroup: eui.Group;
+    private about: eui.Group;
 
     private sound: egret.Sound;
     private channel: egret.SoundChannel;
@@ -19,6 +21,7 @@ class GameStart extends eui.Component {
     private init() {
         this.removeEventListener(eui.UIEvent.CREATION_COMPLETE, this.init, this);
         this.start_btn.addEventListener(egret.TouchEvent.TOUCH_TAP, this.startGame, this);
+        this.about_btn.addEventListener(egret.TouchEvent.TOUCH_TAP, this.aboutGame, this);
         this.hornGroup.addEventListener(egret.TouchEvent.TOUCH_TAP, this.switch, this);
         this.sound = RES.getRes("menu_mp3");
         this.channel = this.sound.play();
@@ -54,6 +57,10 @@ class GameStart extends eui.Component {
             this.hornGroup.addChild(this.hornOff);
         }
 
+    }
+
+    private aboutGame() {
+        this.about.visible = !this.about.visible;
     }
 
 }

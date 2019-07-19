@@ -20,6 +20,7 @@ var GameStart = (function (_super) {
     GameStart.prototype.init = function () {
         this.removeEventListener(eui.UIEvent.CREATION_COMPLETE, this.init, this);
         this.start_btn.addEventListener(egret.TouchEvent.TOUCH_TAP, this.startGame, this);
+        this.about_btn.addEventListener(egret.TouchEvent.TOUCH_TAP, this.aboutGame, this);
         this.hornGroup.addEventListener(egret.TouchEvent.TOUCH_TAP, this.switch, this);
         this.sound = RES.getRes("menu_mp3");
         this.channel = this.sound.play();
@@ -49,6 +50,9 @@ var GameStart = (function (_super) {
             this.hornGroup.removeChildren();
             this.hornGroup.addChild(this.hornOff);
         }
+    };
+    GameStart.prototype.aboutGame = function () {
+        this.about.visible = !this.about.visible;
     };
     return GameStart;
 }(eui.Component));

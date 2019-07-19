@@ -12,6 +12,8 @@ var AirPlane = (function (_super) {
     __extends(AirPlane, _super);
     function AirPlane(texture, fireDelay, textureName, scale) {
         var _this = _super.call(this) || this;
+        //奖品数
+        _this.awardCount = 0;
         _this.fireDelay = fireDelay;
         _this.bmp = new egret.Bitmap(texture);
         _this.bmp.scaleX = scale;
@@ -23,7 +25,7 @@ var AirPlane = (function (_super) {
         _this.blood = 30;
         return _this;
     }
-    AirPlane.produce = function (tName, fireDelay) {
+    AirPlane.produce = function (tName, fireDelay, speed) {
         if (AirPlane.cacheDict[tName] == null) {
             AirPlane.cacheDict[tName] = [];
         }
@@ -36,6 +38,7 @@ var AirPlane = (function (_super) {
             newPlane = new AirPlane(RES.getRes(tName), fireDelay, "tName", Constant.enemyScale_1);
         }
         newPlane.blood = 10;
+        newPlane.speed = speed;
         return newPlane;
     };
     AirPlane.destory = function (plane) {

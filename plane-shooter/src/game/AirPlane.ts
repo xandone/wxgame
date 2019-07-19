@@ -4,7 +4,12 @@ class AirPlane extends egret.DisplayObjectContainer {
     private textureName: string;
     private fireTimer: egret.Timer;
     private static cacheDict: Object = [];
+    //血量
     public blood: number;
+    //飞行速度
+    public speed: number;
+    //奖品数
+    public awardCount: number = 0;
     public constructor(texture: egret.Texture, fireDelay: number, textureName: string, scale: number) {
         super();
         this.fireDelay = fireDelay;
@@ -18,7 +23,7 @@ class AirPlane extends egret.DisplayObjectContainer {
         this.blood = 30;
     }
 
-    public static produce(tName: string, fireDelay: number) {
+    public static produce(tName: string, fireDelay: number, speed: number) {
         if (AirPlane.cacheDict[tName] == null) {
             AirPlane.cacheDict[tName] = [];
         }
@@ -31,6 +36,7 @@ class AirPlane extends egret.DisplayObjectContainer {
         }
 
         newPlane.blood = 10;
+        newPlane.speed = speed;
         return newPlane;
     }
 
