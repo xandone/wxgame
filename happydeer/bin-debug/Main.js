@@ -114,7 +114,6 @@ var Main = (function (_super) {
                         return [4 /*yield*/, platform.getUserInfo()];
                     case 4:
                         userInfo = _a.sent();
-                        Constant.userInfo = userInfo;
                         console.log(userInfo);
                         return [2 /*return*/];
                 }
@@ -168,25 +167,9 @@ var Main = (function (_super) {
     Main.prototype.createGameScene = function () {
         Constant.stageW = this.width;
         Constant.stageH = this.height;
-        //加载资源
-        var platform = window.platform;
-        platform.openDataContext.postMessage({
-            command: 'loadRes'
-        });
         SceneManager.instance.setStage(this);
-        SceneManager.addScene(SceneManager.instance._gameStart);
-    };
-    /**
-     * 根据name关键字创建一个Bitmap对象。name属性请参考resources/resource.json配置文件的内容。
-     * Create a Bitmap object according to name keyword.As for the property of name please refer to the configuration file of resources/resource.json.
-     */
-    Main.prototype.createBitmapByName = function (name) {
-        var result = new egret.Bitmap();
-        var texture = RES.getRes(name);
-        result.texture = texture;
-        return result;
+        SceneManager.addScene(SceneManager.instance._gameMain);
     };
     return Main;
 }(eui.UILayer));
 __reflect(Main.prototype, "Main");
-//# sourceMappingURL=Main.js.map

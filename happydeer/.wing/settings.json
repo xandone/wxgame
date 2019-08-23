@@ -3,6 +3,4 @@
 		"**/bin-debug": true,
 		"**/bin-release": true
 	}
-,
-"editor.fontSize": 18
 }

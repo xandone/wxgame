@@ -79,18 +79,17 @@ var GameStart = (function (_super) {
             //设置为true,以免触摸到下面的按钮
             this.rankingListMask.touchEnabled = true;
             this.addChildAt(this.rankingListMask, 999);
-            //让排行榜按钮显示在容器内
-            this.addChild(this.ranking_btn);
             //显示开放域数据
             this.bitmap = platform.openDataContext.createDisplayObject(null, this.stage.stageWidth, this.stage.stageHeight);
             this.addChild(this.bitmap);
+            //让排行榜按钮显示在容器内
+            this.addChild(this.ranking_btn);
             //主域向子域发送数据
-            console.log("nickName123===" + Constant.userInfo.nickName);
             platform.openDataContext.postMessage({
                 isRanking: this.isRankClick,
                 text: "egret",
                 year: (new Date()).getFullYear(),
-                score: Constant.userInfo.nickName,
+                score: 101,
                 command: "open"
             });
             this.isRankClick = true;
