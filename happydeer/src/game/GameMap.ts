@@ -26,7 +26,6 @@ class GameMap extends egret.DisplayObjectContainer {
 		}
 		this._hole = this.createBall(60, 20);
 		this.addChild(this._hole);
-
 	}
 	public start() {
 		this.isMoving = true;
@@ -57,9 +56,8 @@ class GameMap extends egret.DisplayObjectContainer {
 		shape.graphics.drawEllipse(0, 0, w, h);
 		shape.graphics.endFill();
 		shape.x = 400;
-		shape.y = 775;
+		shape.y = 785 - Constant.zomStatyYOffset;
 		return shape;
 	}
-
 
 }

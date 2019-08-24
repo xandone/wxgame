@@ -1,5 +1,6 @@
 class GameMain extends egret.DisplayObjectContainer {
 	private bombMc: egret.MovieClip;
+	private bomnMcY: number;
 	private speed: number = 5;
 	private maxHeight = 80;
 	private currentOffset = 0;
@@ -30,9 +31,15 @@ class GameMain extends egret.DisplayObjectContainer {
 		this.addEventListener(egret.Event.ENTER_FRAME, this.updateGameView, this);
 	}
 
+	private removeEvent() {
+		this.removeEventListener(egret.TouchEvent.TOUCH_BEGIN, this.touchMove, this);
+		this.removeEventListener(egret.TouchEvent.TOUCH_END, this.touchMove, this);
+		this.removeEventListener(egret.Event.ENTER_FRAME, this.updateGameView, this);
+	}
+
 	private startGame() {
 		this.touchEnabled = true;
-		this.jump(this.bombMc, Constant.stageW / 2 - this.bombMc.width / 2, Constant.stageH - this.bombMc.height);
+		this.jump(this.bombMc, Constant.stageW / 2 - this.bombMc.width / 2, Constant.stageH - this.bombMc.height * Constant.zomScale - Constant.zomStatyYOffset);
 	}
 
 	private touchMove(event: egret.TouchEvent) {
@@ -47,9 +54,17 @@ class GameMain extends egret.DisplayObjectContainer {
 	}
 
 	private updateGameView() {
+		if (this.isGameOver) {
+			return;
+		}
 		if (this.currentOffset <= this.maxHeight && this.isJumpUp) {
+			console.log(this.bombMc.y + "   " + (this.bomnMcY - this.maxHeight));
 			this.bombMc.y -= this.speed;
 			this.currentOffset = this.currentOffset + this.speed;
+			if (this.bombMc.y == this.bomnMcY - this.maxHeight) {
+				console.log(123);
+				this.playBombAudio("jump_wav");
+			}
 			if (this.currentOffset >= this.maxHeight) {
 				this.isJumpUp = false;
 			}
@@ -61,12 +76,27 @@ class GameMain extends egret.DisplayObjectContainer {
 			}
 		}
 
-		if (SceneManager.hitTest(this.bombMc, SceneManager.instance._gameMap._hole)) {
+		if (SceneManager.dropHole(this.bombMc, SceneManager.instance._gameMap._hole, this.bomnMcY)) {
 			console.log("碰撞");
 			this.isGameOver = true;
 			this.stopJump(this.bombMc);
 			SceneManager.instance._gameMap.pause();
+			this.touchEnabled = false;
+			this.removeEvent();
+			this.playBombAudio("gameover_mp3");
+			this.deathMask();
+			setTimeout(() => {
+				this.animhole();
+			}, 500)
 		}
+
+	}
+
+	private animhole() {
+		var bTween = egret.Tween.get(this.bombMc);
+		bTween.to({ y: 1200 }, 1200, egret.Ease.circIn).call(() => {
+			this.removeChild(this.bombMc);
+		});
 	}
 
 	private initJump() {
@@ -74,13 +104,14 @@ class GameMain extends egret.DisplayObjectContainer {
 		var txtr = RES.getRes("zom_png");
 		var mcFactory: egret.MovieClipDataFactory = new egret.MovieClipDataFactory(data, txtr);
 		this.bombMc = new egret.MovieClip(mcFactory.generateMovieClipData("zom"));
-		// this.bombMc.scaleX = 0.5;
-		// this.bombMc.scaleY = 0.5;
+		this.bombMc.scaleX = Constant.zomScale;
+		this.bombMc.scaleY = Constant.zomScale;
 	}
 
 	private jump(mc1: egret.MovieClip, x: number, y: number) {
 		mc1.x = x;
 		mc1.y = y;
+		this.bomnMcY = y;
 		this.addChild(mc1);
 		mc1.gotoAndPlay(1, -1);
 	}
@@ -88,6 +119,24 @@ class GameMain extends egret.DisplayObjectContainer {
 	private stopJump(mc1: egret.MovieClip) {
 		mc1.gotoAndStop(1);
 		mc1.stop();
+	}
+
+	private playBombAudio(resName: string) {
+		var sound: egret.Sound = RES.getRes(resName);
+		sound.play(0, 1);
+	}
+
+
+	private deathMask() {
+		//画一个红色的正方形
+		var square: egret.Shape = new egret.Shape();
+		square.graphics.beginFill(0xff0000);
+		square.graphics.drawRect(0, 0, this.bombMc.width * Constant.zomScale, this.bombMc.height * Constant.zomScale);
+		square.graphics.endFill();
+		square.x = this.bombMc.x;
+		square.y = this.bombMc.y;
+		this.addChild(square);
+		this.bombMc.mask = square;
 	}
 
 }

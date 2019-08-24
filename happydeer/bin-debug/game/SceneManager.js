@@ -73,9 +73,20 @@ var SceneManager = (function () {
         rect1.y = obj1.y;
         rect2.x = obj2.x;
         rect2.y = obj2.y;
-        console.log(rect1.x + "  " + rect1.y);
-        console.log(rect2.x + "  " + rect2.y);
+        // console.log(rect1.x+"  "+ rect1.y);
+        // console.log(rect2.x+"  "+ rect2.y);
         return rect1.intersects(rect2);
+    };
+    SceneManager.dropHole = function (zom, hole, zomLowest) {
+        var x1 = zom.x + zom.width * 0.6 / 2;
+        var y1 = zom.y;
+        var holex1 = hole.x;
+        var holex2 = holex1 + hole.width;
+        if (x1 < holex2 && x1 > holex1 && y1 >= zomLowest) {
+            console.log(x1 + "  " + holex1 + "  " + holex2 + "  y1=" + y1 + "   zomLowest=" + zomLowest);
+            return true;
+        }
+        return false;
     };
     return SceneManager;
 }());

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin width="480" height="800" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing">
+	<e:Button id="restart_btn" x="140" y="602.48" width="200" height="70" label="再来一次">
+	
+	</e:Button>
+</e:Skin>

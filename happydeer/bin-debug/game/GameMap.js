@@ -59,7 +59,7 @@ var GameMap = (function (_super) {
         shape.graphics.drawEllipse(0, 0, w, h);
         shape.graphics.endFill();
         shape.x = 400;
-        shape.y = 775;
+        shape.y = 785 - Constant.zomStatyYOffset;
         return shape;
     };
     return GameMap;
