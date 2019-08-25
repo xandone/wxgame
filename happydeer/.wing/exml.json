@@ -1,7 +1,10 @@
 {
-    "16cc26b77dc": {
-        "path": "..\\resource\\eui_skins\\gameskin\\score.ts",
-        "class": "score",
-        "parentPath": ""
-    }
+  "16cc26b77dc": {
+    "path": "..\\resource\\eui_skins\\gameskin\\score.ts",
+    "class": "score",
+    "parentPath": ""
+  },
+  "global": {
+    "globalAutoLayerMarkEnable": true
+  }
 }

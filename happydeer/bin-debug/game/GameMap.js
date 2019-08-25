@@ -13,6 +13,7 @@ var GameMap = (function (_super) {
     function GameMap() {
         var _this = _super.call(this) || this;
         _this.speed = 5;
+        _this._hole = [];
         _this.addEventListener(egret.Event.ADDED_TO_STAGE, _this.init, _this);
         return _this;
     }
@@ -29,8 +30,7 @@ var GameMap = (function (_super) {
             this.bmpArr.push(bg);
             this.addChild(bg);
         }
-        this._hole = this.createBall(60, 20);
-        this.addChild(this._hole);
+        this.createBall();
     };
     GameMap.prototype.start = function () {
         this.isMoving = true;
@@ -42,7 +42,6 @@ var GameMap = (function (_super) {
         this.removeEventListener(egret.Event.ENTER_FRAME, this.enterFrame, this);
     };
     GameMap.prototype.enterFrame = function () {
-        this._hole.x -= this.speed;
         for (var i = 0; i < this.rowCount; i++) {
             var bg = this.bmpArr[i];
             bg.x -= this.speed;
@@ -52,15 +51,40 @@ var GameMap = (function (_super) {
                 this.bmpArr.push(bg);
             }
         }
+        // 洞运动
+        var holeLen = this._hole.length;
+        for (var i = 0; i < holeLen; i++) {
+            var hole = this._hole[i];
+            if (hole.x < -hole.width) {
+                try {
+                    this.removeChild(hole);
+                }
+                catch (error) {
+                }
+                Hole.destroy(hole);
+                this._hole.splice(i, 1);
+                i--;
+                holeLen--;
+            }
+            hole.x -= this.speed;
+        }
     };
-    GameMap.prototype.createBall = function (w, h) {
-        var shape = new egret.Shape();
-        shape.graphics.beginFill(0x444446);
-        shape.graphics.drawEllipse(0, 0, w, h);
-        shape.graphics.endFill();
-        shape.x = 400;
-        shape.y = 785 - Constant.zomStatyYOffset;
-        return shape;
+    GameMap.prototype.createBall = function () {
+        var shape = Hole.produce("myhole");
+        this._hole.push(shape);
+        this.addChild(shape);
+        console.log(shape.x + "   y=" + shape.y);
+    };
+    GameMap.prototype.reset = function () {
+        this.removeChildren();
+        for (var i = 0; i < this._hole.length; i++) {
+            try {
+                this.removeChild(this._hole[i]);
+            }
+            catch (error) {
+            }
+        }
+        this._hole = [];
     };
     return GameMap;
 }(egret.DisplayObjectContainer));

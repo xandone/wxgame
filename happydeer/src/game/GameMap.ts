@@ -3,8 +3,8 @@ class GameMap extends egret.DisplayObjectContainer {
 	private rowCount: number;
 	private bmpArr: egret.Bitmap[];
 	private speed: number = 5;
-	public _hole: egret.Shape;
 	private isMoving: boolean;
+	public _hole: Hole[] = [];
 
 	public constructor() {
 		super();
@@ -24,8 +24,8 @@ class GameMap extends egret.DisplayObjectContainer {
 			this.bmpArr.push(bg);
 			this.addChild(bg);
 		}
-		this._hole = this.createBall(60, 20);
-		this.addChild(this._hole);
+		this.createBall();
+
 	}
 	public start() {
 		this.isMoving = true;
@@ -38,7 +38,6 @@ class GameMap extends egret.DisplayObjectContainer {
 	}
 
 	private enterFrame() {
-		this._hole.x -= this.speed;
 		for (let i: number = 0; i < this.rowCount; i++) {
 			let bg: egret.Bitmap = this.bmpArr[i];
 			bg.x -= this.speed;
@@ -48,16 +47,43 @@ class GameMap extends egret.DisplayObjectContainer {
 				this.bmpArr.push(bg);
 			}
 		}
+
+		// 洞运动
+		let holeLen = this._hole.length
+		for (let i: number = 0; i < holeLen; i++) {
+			let hole: Hole = this._hole[i];
+			if (hole.x < -hole.width) {
+				try {
+					this.removeChild(hole);
+				} catch (error) {
+
+				}
+				Hole.destroy(hole);
+				this._hole.splice(i, 1);
+				i--;
+				holeLen--;
+			}
+			hole.x -= this.speed;
+		}
 	}
 
-	private createBall(w: number, h: number): egret.Shape {
-		var shape = new egret.Shape();
-		shape.graphics.beginFill(0x444446);
-		shape.graphics.drawEllipse(0, 0, w, h);
-		shape.graphics.endFill();
-		shape.x = 400;
-		shape.y = 785 - Constant.zomStatyYOffset;
-		return shape;
+	public createBall() {
+		let shape = Hole.produce("myhole");
+		this._hole.push(shape);
+		this.addChild(shape);
+		console.log(shape.x + "   y=" + shape.y);
+	}
+
+	public reset() {
+		this.removeChildren();
+		for (let i: number = 0; i < this._hole.length; i++) {
+			try {
+				this.removeChild(this._hole[i]);
+			} catch (error) {
+
+			}
+		}
+		this._hole = [];
 	}
 
 }

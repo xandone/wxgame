@@ -24,6 +24,7 @@ var GameMain = (function (_super) {
         this.createMain();
     };
     GameMain.prototype.createMain = function () {
+        console.log("初始化/..");
         SceneManager.addScene(SceneManager.instance._gameMap, this);
         this.initEvent();
         this.initJump();
@@ -43,6 +44,15 @@ var GameMain = (function (_super) {
         this.touchEnabled = true;
         this.jump(this.bombMc, Constant.stageW / 2 - this.bombMc.width / 2, Constant.stageH - this.bombMc.height * Constant.zomScale - Constant.zomStatyYOffset);
     };
+    GameMain.prototype.restart = function () {
+        this.isJumpUp = true;
+        this.currentOffset = 0;
+        this.isGameOver = false;
+        this.removeChildren();
+        SceneManager.instance._gameMap = null;
+        SceneManager.instance.createNewMap();
+        this.createMain();
+    };
     GameMain.prototype.touchMove = function (event) {
         if (this.isGameOver) {
             return;
@@ -60,11 +70,9 @@ var GameMain = (function (_super) {
             return;
         }
         if (this.currentOffset <= this.maxHeight && this.isJumpUp) {
-            console.log(this.bombMc.y + "   " + (this.bomnMcY - this.maxHeight));
             this.bombMc.y -= this.speed;
             this.currentOffset = this.currentOffset + this.speed;
             if (this.bombMc.y == this.bomnMcY - this.maxHeight) {
-                console.log(123);
                 this.playBombAudio("jump_wav");
             }
             if (this.currentOffset >= this.maxHeight) {
@@ -78,18 +86,27 @@ var GameMain = (function (_super) {
                 this.isJumpUp = true;
             }
         }
-        if (SceneManager.dropHole(this.bombMc, SceneManager.instance._gameMap._hole, this.bomnMcY)) {
-            console.log("碰撞");
-            this.isGameOver = true;
-            this.stopJump(this.bombMc);
-            SceneManager.instance._gameMap.pause();
-            this.touchEnabled = false;
-            this.removeEvent();
-            this.playBombAudio("gameover_mp3");
-            this.t();
-            setTimeout(function () {
-                _this.animhole();
-            }, 500);
+        //判断是否掉到洞里
+        var holeLen = SceneManager.instance._gameMap._hole.length;
+        for (var i = 0; i < holeLen; i++) {
+            var hole = SceneManager.instance._gameMap._hole[i];
+            if (SceneManager.dropHole(this.bombMc, hole, this.bomnMcY)) {
+                console.log("碰撞");
+                this.isGameOver = true;
+                this.stopJump(this.bombMc);
+                SceneManager.instance._gameMap.pause();
+                this.touchEnabled = false;
+                this.removeEvent();
+                this.playBombAudio("gameover_mp3");
+                this.deathMask();
+                setTimeout(function () {
+                    _this.animhole();
+                }, 500);
+                break;
+            }
+            else if (hole.x < this.bombMc.x && holeLen < 2) {
+                SceneManager.instance._gameMap.createBall();
+            }
         }
     };
     GameMain.prototype.animhole = function () {
@@ -97,6 +114,7 @@ var GameMain = (function (_super) {
         var bTween = egret.Tween.get(this.bombMc);
         bTween.to({ y: 1200 }, 1200, egret.Ease.circIn).call(function () {
             _this.removeChild(_this.bombMc);
+            SceneManager.addScene(SceneManager.instance._scorePanel, SceneManager.instance._gameMain);
         });
     };
     GameMain.prototype.initJump = function () {
@@ -122,7 +140,7 @@ var GameMain = (function (_super) {
         var sound = RES.getRes(resName);
         sound.play(0, 1);
     };
-    GameMain.prototype.t = function () {
+    GameMain.prototype.deathMask = function () {
         //画一个红色的正方形
         var square = new egret.Shape();
         square.graphics.beginFill(0xff0000);

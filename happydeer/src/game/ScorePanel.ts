@@ -9,5 +9,11 @@ class ScorePanel extends eui.Component {
 	}
 
 	private init() {
+		this.removeEventListener(eui.UIEvent.CREATION_COMPLETE, this.init, this);
+		this.restart_btn.addEventListener(egret.TouchEvent.TOUCH_TAP, this.restart, this);
+	}
+
+	private restart() {
+		SceneManager.instance._gameMain.restart();
 	}
 }

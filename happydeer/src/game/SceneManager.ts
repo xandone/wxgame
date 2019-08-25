@@ -3,9 +3,15 @@ class SceneManager {
     public _stage: egret.DisplayObjectContainer;
     public _gameMap: GameMap;
     public _gameMain: GameMain;
+    public _scorePanel: ScorePanel;
 
     constructor() {
         this._gameMain = new GameMain();
+        this._gameMap = new GameMap();
+        this._scorePanel = new ScorePanel();
+    }
+
+    public createNewMap() {
         this._gameMap = new GameMap();
     }
 

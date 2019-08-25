@@ -18,6 +18,7 @@ class GameMain extends egret.DisplayObjectContainer {
 	}
 
 	private createMain() {
+		console.log("初始化/..");
 		SceneManager.addScene(SceneManager.instance._gameMap, this);
 
 		this.initEvent();
@@ -42,6 +43,16 @@ class GameMain extends egret.DisplayObjectContainer {
 		this.jump(this.bombMc, Constant.stageW / 2 - this.bombMc.width / 2, Constant.stageH - this.bombMc.height * Constant.zomScale - Constant.zomStatyYOffset);
 	}
 
+	public restart() {
+		this.isJumpUp = true;
+		this.currentOffset = 0;
+		this.isGameOver = false;
+		this.removeChildren();
+		SceneManager.instance._gameMap = null;
+		SceneManager.instance.createNewMap();
+		this.createMain();
+	}
+
 	private touchMove(event: egret.TouchEvent) {
 		if (this.isGameOver) {
 			return;
@@ -58,11 +69,9 @@ class GameMain extends egret.DisplayObjectContainer {
 			return;
 		}
 		if (this.currentOffset <= this.maxHeight && this.isJumpUp) {
-			console.log(this.bombMc.y + "   " + (this.bomnMcY - this.maxHeight));
 			this.bombMc.y -= this.speed;
 			this.currentOffset = this.currentOffset + this.speed;
 			if (this.bombMc.y == this.bomnMcY - this.maxHeight) {
-				console.log(123);
 				this.playBombAudio("jump_wav");
 			}
 			if (this.currentOffset >= this.maxHeight) {
@@ -75,19 +84,27 @@ class GameMain extends egret.DisplayObjectContainer {
 				this.isJumpUp = true;
 			}
 		}
+		//判断是否掉到洞里
+		let holeLen = SceneManager.instance._gameMap._hole.length;
+		for (let i: number = 0; i < holeLen; i++) {
+			let hole = SceneManager.instance._gameMap._hole[i];
+			if (SceneManager.dropHole(this.bombMc, hole, this.bomnMcY)) {
+				console.log("碰撞");
+				this.isGameOver = true;
+				this.stopJump(this.bombMc);
+				SceneManager.instance._gameMap.pause();
+				this.touchEnabled = false;
+				this.removeEvent();
+				this.playBombAudio("gameover_mp3");
+				this.deathMask();
+				setTimeout(() => {
+					this.animhole();
+				}, 500)
+				break;
+			} else if (hole.x < this.bombMc.x && holeLen < 2) {
+				SceneManager.instance._gameMap.createBall();
+			}
 
-		if (SceneManager.dropHole(this.bombMc, SceneManager.instance._gameMap._hole, this.bomnMcY)) {
-			console.log("碰撞");
-			this.isGameOver = true;
-			this.stopJump(this.bombMc);
-			SceneManager.instance._gameMap.pause();
-			this.touchEnabled = false;
-			this.removeEvent();
-			this.playBombAudio("gameover_mp3");
-			this.deathMask();
-			setTimeout(() => {
-				this.animhole();
-			}, 500)
 		}
 
 	}
@@ -96,6 +113,7 @@ class GameMain extends egret.DisplayObjectContainer {
 		var bTween = egret.Tween.get(this.bombMc);
 		bTween.to({ y: 1200 }, 1200, egret.Ease.circIn).call(() => {
 			this.removeChild(this.bombMc);
+			SceneManager.addScene(SceneManager.instance._scorePanel, SceneManager.instance._gameMain);
 		});
 	}
 

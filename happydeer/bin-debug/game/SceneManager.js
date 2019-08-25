@@ -5,7 +5,11 @@ var SceneManager = (function () {
     function SceneManager() {
         this._gameMain = new GameMain();
         this._gameMap = new GameMap();
+        this._scorePanel = new ScorePanel();
     }
+    SceneManager.prototype.createNewMap = function () {
+        this._gameMap = new GameMap();
+    };
     Object.defineProperty(SceneManager, "instance", {
         /**获取实例 */
         get: function () {
