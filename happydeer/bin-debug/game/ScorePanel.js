@@ -12,7 +12,7 @@ var ScorePanel = (function (_super) {
     __extends(ScorePanel, _super);
     function ScorePanel() {
         var _this = _super.call(this) || this;
-        _this.skinName = "resource/eui_skins/gameSkin/score.exml";
+        _this.skinName = "resource/eui_skins/gameskin/score.exml";
         _this.addEventListener(eui.UIEvent.CREATION_COMPLETE, _this.init, _this);
         return _this;
     }
@@ -20,7 +20,11 @@ var ScorePanel = (function (_super) {
         this.removeEventListener(eui.UIEvent.CREATION_COMPLETE, this.init, this);
         this.restart_btn.addEventListener(egret.TouchEvent.TOUCH_TAP, this.restart, this);
     };
+    ScorePanel.prototype.setScore = function () {
+        this.score.text = SceneManager.instance._gameMap.getScore();
+    };
     ScorePanel.prototype.restart = function () {
+        SceneManager.switchScene(SceneManager.instance._gameMain);
         SceneManager.instance._gameMain.restart();
     };
     return ScorePanel;

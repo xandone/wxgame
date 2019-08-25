@@ -114,7 +114,9 @@ var GameMain = (function (_super) {
         var bTween = egret.Tween.get(this.bombMc);
         bTween.to({ y: 1200 }, 1200, egret.Ease.circIn).call(function () {
             _this.removeChild(_this.bombMc);
-            SceneManager.addScene(SceneManager.instance._scorePanel, SceneManager.instance._gameMain);
+            SceneManager.instance._gameMap.clearScore();
+            SceneManager.addScene(SceneManager.instance._scorePanel);
+            SceneManager.instance._scorePanel.setScore();
         });
     };
     GameMain.prototype.initJump = function () {

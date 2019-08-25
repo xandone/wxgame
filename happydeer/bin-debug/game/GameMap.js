@@ -19,6 +19,8 @@ var GameMap = (function (_super) {
     }
     GameMap.prototype.init = function () {
         this.removeEventListener(egret.Event.ADDED_TO_STAGE, this.init, this);
+        this.distance = 0;
+        this.score = 0;
         var texture = RES.getRes("bg_png");
         this.textureW = texture.textureWidth;
         this.rowCount = Math.ceil(Constant.stageW / this.textureW) + 1;
@@ -30,6 +32,7 @@ var GameMap = (function (_super) {
             this.bmpArr.push(bg);
             this.addChild(bg);
         }
+        this.createScore();
         this.createBall();
     };
     GameMap.prototype.start = function () {
@@ -42,6 +45,11 @@ var GameMap = (function (_super) {
         this.removeEventListener(egret.Event.ENTER_FRAME, this.enterFrame, this);
     };
     GameMap.prototype.enterFrame = function () {
+        this.distance += this.speed;
+        if (this.distance % 100 == 0 && this.distance != 0) {
+            this.score++;
+            this.scoreLabel.text = String(this.score);
+        }
         for (var i = 0; i < this.rowCount; i++) {
             var bg = this.bmpArr[i];
             bg.x -= this.speed;
@@ -69,11 +77,23 @@ var GameMap = (function (_super) {
             hole.x -= this.speed;
         }
     };
+    GameMap.prototype.getScore = function () {
+        return String(this.score);
+    };
     GameMap.prototype.createBall = function () {
         var shape = Hole.produce("myhole");
         this._hole.push(shape);
         this.addChild(shape);
-        console.log(shape.x + "   y=" + shape.y);
+    };
+    GameMap.prototype.createScore = function () {
+        var label = new egret.TextField();
+        label.text = "0";
+        label.x = 80;
+        label.y = 50;
+        label.size = 50;
+        label.textColor = 0x000000;
+        this.scoreLabel = label;
+        this.addChild(this.scoreLabel);
     };
     GameMap.prototype.reset = function () {
         this.removeChildren();
@@ -85,6 +105,13 @@ var GameMap = (function (_super) {
             }
         }
         this._hole = [];
+    };
+    GameMap.prototype.clearScore = function () {
+        try {
+            this.removeChild(this.scoreLabel);
+        }
+        catch (error) {
+        }
     };
     return GameMap;
 }(egret.DisplayObjectContainer));
