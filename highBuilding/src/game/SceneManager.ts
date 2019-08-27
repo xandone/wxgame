@@ -80,4 +80,8 @@ class SceneManager {
         return rect1.intersects(rect2);
     }
 
+    static findMax() {
+        
+    }
+
 }
