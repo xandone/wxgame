@@ -76,105 +76,18 @@ class Main extends egret.DisplayObjectContainer {
             this.loadingView.setProgress(event.itemsLoaded, event.itemsTotal);
         }
     }
-    //debug模式，使用图形绘制
-    private isDebug: boolean = false;
 
     /**
      * 创建游戏场景
      */
     private createGameScene(): void {
-        //egret.Profiler.getInstance().run();
-        var factor: number = 50;
+        Constant.stageW = this.width;
+        Constant.stageH = this.height;
 
-        //创建world
-        var world: p2.World = new p2.World();
-        world.sleepMode = p2.World.BODY_SLEEPING;
+        SceneManager.instance.setStage(this);
+        SceneManager.addScene(SceneManager.instance._gameMain);
 
-        //创建plane
-        var planeShape: p2.Plane = new p2.Plane();
-        var planeBody: p2.Body = new p2.Body();
-        planeBody.addShape(planeShape);
-        planeBody.displays = [];
-        world.addBody(planeBody);
-
-        egret.Ticker.getInstance().register(function (dt) {
-            if (dt < 10) {
-                return;
-            }
-            if (dt > 1000) {
-                return;
-            }
-            world.step(dt / 1000);
-
-            var stageHeight: number = egret.MainContext.instance.stage.stageHeight;
-            var l = world.bodies.length;
-            for (var i: number = 0; i < l; i++) {
-                var boxBody: p2.Body = world.bodies[i];
-                console.log(boxBody.displays.length);
-                if (!boxBody.displays[0]) {
-                    return;
-                }
-                var box: egret.DisplayObject = boxBody.displays[0];
-                if (box) {
-                    box.x = boxBody.position[0] * factor;
-                    box.y = stageHeight - boxBody.position[1] * factor;
-                    box.rotation = 360 - (boxBody.angle + boxBody.shapes[0].angle) * 180 / Math.PI;
-                    if (boxBody.sleepState == p2.Body.SLEEPING) {
-                        box.alpha = 0.5;
-                    }
-                    else {
-                        box.alpha = 1;
-                    }
-                }
-            }
-        }, this);
-
-        //鼠标点击添加刚体
-        this.stage.addEventListener(egret.TouchEvent.TOUCH_BEGIN, addOneBox, this);
-        var self = this;
-
-        function addOneBox(e: egret.TouchEvent): void {
-            var positionX: number = Math.floor(e.stageX / factor);
-            var positionY: number = Math.floor((egret.MainContext.instance.stage.stageHeight - e.stageY) / factor);
-            var display: egret.DisplayObject;
-
-            display = self.createBitmapByName("rect_png");
-            display.anchorOffsetX = display.width / 2;
-            display.anchorOffsetY = display.height / 2;
-            display.x = 200;
-            display.y = 200;
-
-            self.addChild(display);
-
-            var ralaote = true;
-            self.addEventListener(egret.Event.ENTER_FRAME, () => {
-                if (ralaote)
-                    display.rotation += 1;
-            }, self);
-
-
-            setTimeout(() => {
-                ralaote = false;
-                //添加方形刚体
-                //var boxShape: p2.Shape = new p2.Rectangle(2, 1);
-                var boxShape: p2.Shape = new p2.Box({ width: 1, height: 1 });
-                var boxBody: p2.Body = new p2.Body({ mass: 1, position: [positionX, positionY], angularVelocity: 0 });
-                boxBody.addShape(boxShape);
-                world.addBody(boxBody);
-                display.width = (<p2.Box>boxShape).width * factor;
-                display.height = (<p2.Box>boxShape).height * factor;
-                boxBody.displays = [display];
-                self.addChild(display);
-            }, 1000);
-        }
     }
-    /**
-     * 根据name关键字创建一个Bitmap对象。name属性请参考resources/resource.json配置文件的内容。
-     */
-    private createBitmapByName(name: string): egret.Bitmap {
-        var result: egret.Bitmap = new egret.Bitmap();
-        var texture: egret.Texture = RES.getRes(name);
-        result.texture = texture;
-        return result;
-    }
+
+
 }

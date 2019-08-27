@@ -40,8 +40,6 @@ var Main = (function (_super) {
     __extends(Main, _super);
     function Main() {
         var _this = _super.call(this) || this;
-        //debug模式，使用图形绘制
-        _this.isDebug = false;
         _this.addEventListener(egret.Event.ADDED_TO_STAGE, _this.onAddToStage, _this);
         return _this;
     }
@@ -85,89 +83,12 @@ var Main = (function (_super) {
      * 创建游戏场景
      */
     Main.prototype.createGameScene = function () {
-        //egret.Profiler.getInstance().run();
-        var factor = 50;
-        //创建world
-        var world = new p2.World();
-        world.sleepMode = p2.World.BODY_SLEEPING;
-        //创建plane
-        var planeShape = new p2.Plane();
-        var planeBody = new p2.Body();
-        planeBody.addShape(planeShape);
-        planeBody.displays = [];
-        world.addBody(planeBody);
-        egret.Ticker.getInstance().register(function (dt) {
-            if (dt < 10) {
-                return;
-            }
-            if (dt > 1000) {
-                return;
-            }
-            world.step(dt / 1000);
-            var stageHeight = egret.MainContext.instance.stage.stageHeight;
-            var l = world.bodies.length;
-            for (var i = 0; i < l; i++) {
-                var boxBody = world.bodies[i];
-                console.log(boxBody.displays.length);
-                if (!boxBody.displays[0]) {
-                    return;
-                }
-                var box = boxBody.displays[0];
-                if (box) {
-                    box.x = boxBody.position[0] * factor;
-                    box.y = stageHeight - boxBody.position[1] * factor;
-                    box.rotation = 360 - (boxBody.angle + boxBody.shapes[0].angle) * 180 / Math.PI;
-                    if (boxBody.sleepState == p2.Body.SLEEPING) {
-                        box.alpha = 0.5;
-                    }
-                    else {
-                        box.alpha = 1;
-                    }
-                }
-            }
-        }, this);
-        //鼠标点击添加刚体
-        this.stage.addEventListener(egret.TouchEvent.TOUCH_BEGIN, addOneBox, this);
-        var self = this;
-        function addOneBox(e) {
-            var positionX = Math.floor(e.stageX / factor);
-            var positionY = Math.floor((egret.MainContext.instance.stage.stageHeight - e.stageY) / factor);
-            var display;
-            display = self.createBitmapByName("rect_png");
-            display.anchorOffsetX = display.width / 2;
-            display.anchorOffsetY = display.height / 2;
-            display.x = 200;
-            display.y = 200;
-            self.addChild(display);
-            var ralaote = true;
-            self.addEventListener(egret.Event.ENTER_FRAME, function () {
-                if (ralaote)
-                    display.rotation += 1;
-            }, self);
-            setTimeout(function () {
-                ralaote = false;
-                //添加方形刚体
-                //var boxShape: p2.Shape = new p2.Rectangle(2, 1);
-                var boxShape = new p2.Box({ width: 1, height: 1 });
-                var boxBody = new p2.Body({ mass: 1, position: [positionX, positionY], angularVelocity: 0 });
-                boxBody.addShape(boxShape);
-                world.addBody(boxBody);
-                display.width = boxShape.width * factor;
-                display.height = boxShape.height * factor;
-                boxBody.displays = [display];
-                self.addChild(display);
-            }, 1000);
-        }
-    };
-    /**
-     * 根据name关键字创建一个Bitmap对象。name属性请参考resources/resource.json配置文件的内容。
-     */
-    Main.prototype.createBitmapByName = function (name) {
-        var result = new egret.Bitmap();
-        var texture = RES.getRes(name);
-        result.texture = texture;
-        return result;
+        Constant.stageW = this.width;
+        Constant.stageH = this.height;
+        SceneManager.instance.setStage(this);
+        SceneManager.addScene(SceneManager.instance._gameMain);
     };
     return Main;
 }(egret.DisplayObjectContainer));
 __reflect(Main.prototype, "Main");
+//# sourceMappingURL=Main.js.map
