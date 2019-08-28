@@ -76,6 +76,8 @@ var SceneManager = (function () {
         // console.log(rect2.x+"  "+ rect2.y);
         return rect1.intersects(rect2);
     };
+    SceneManager.findMax = function () {
+    };
     return SceneManager;
 }());
 __reflect(SceneManager.prototype, "SceneManager");

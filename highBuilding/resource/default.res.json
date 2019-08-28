@@ -1,7 +1,7 @@
 {
 	"groups": [
 		{
-			"keys": "checkbox_select_disabled_png,checkbox_select_down_png,checkbox_select_up_png,checkbox_unselect_png,selected_png,border_png,header_png,radiobutton_select_disabled_png,radiobutton_select_down_png,radiobutton_select_up_png,radiobutton_unselect_png,roundthumb_png,thumb_png,track_png,tracklight_png,handle_png,off_png,on_png,button_down_png,button_up_png,thumb_pb_png,track_pb_png,track_sb_png,description_json,rect_png,rect2_png",
+			"keys": "checkbox_select_disabled_png,checkbox_select_down_png,checkbox_select_up_png,checkbox_unselect_png,selected_png,border_png,header_png,radiobutton_select_disabled_png,radiobutton_select_down_png,radiobutton_select_up_png,radiobutton_unselect_png,roundthumb_png,thumb_png,track_png,tracklight_png,handle_png,off_png,on_png,button_down_png,button_up_png,thumb_pb_png,track_pb_png,track_sb_png,description_json,rect_png,rect2_png,gamebg_png,score_json",
 			"name": "preload"
 		}
 	],
@@ -135,6 +135,17 @@
 			"name": "rect2_png",
 			"type": "image",
 			"url": "assets/game/rect2.png"
+		},
+		{
+			"name": "gamebg_png",
+			"type": "image",
+			"url": "assets/game/gamebg.png"
+		},
+		{
+			"name": "score_json",
+			"type": "sheet",
+			"url": "assets/game/score.json",
+			"subkeys": "0,1,2,3,4,5,6,7,8,9"
 		}
 	]
 }

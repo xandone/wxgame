@@ -170,9 +170,9 @@ var Main = (function (_super) {
         Constant.stageH = this.height;
         //加载资源
         var platform = window.platform;
-        platform.openDataContext.postMessage({
-            command: 'loadRes'
-        });
+        // platform.openDataContext.postMessage({
+        //     command: 'loadRes'
+        // });
         SceneManager.instance.setStage(this);
         SceneManager.addScene(SceneManager.instance._gameStart);
     };

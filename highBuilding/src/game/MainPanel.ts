@@ -3,6 +3,15 @@ class MainPanel extends egret.DisplayObjectContainer {
 	private factor: number = 50;
 	private display: egret.DisplayObject;
 	private offset: number;
+	private gameBmp: egret.Bitmap;
+	/**
+	 *绳子shape
+	 */
+	private lineShape: egret.Shape;
+	/**
+	 * 等分
+	 */
+	private goldScore: number = 0;
 
 	public constructor() {
 		super();
@@ -11,9 +20,11 @@ class MainPanel extends egret.DisplayObjectContainer {
 
 	private init() {
 		this.removeEventListener(egret.Event.ADDED_TO_STAGE, this.init, this);
+		this.gameBmp = new egret.Bitmap(RES.getRes("gamebg_png"));
+		this.addChild(this.gameBmp);
+		this.createScore();
 		this.init2();
 	}
-
 
 	private init2() {
 		//创建world
@@ -47,7 +58,7 @@ class MainPanel extends egret.DisplayObjectContainer {
 						box.y = stageHeight - boxBody.position[1] * self.factor;
 						box.rotation = 360 - (boxBody.angle + boxBody.shapes[0].angle) * 180 / Math.PI;
 						if (boxBody.sleepState == p2.Body.SLEEPING) {
-							box.alpha = 0.5;
+							box.alpha = 0.8;
 						}
 						else {
 							box.alpha = 1;
@@ -66,9 +77,10 @@ class MainPanel extends egret.DisplayObjectContainer {
 		self.drawLine();
 
 		function stopTween() {
+			self.stage.removeEventListener(egret.TouchEvent.TOUCH_BEGIN, stopTween, this);
 			egret.Tween.removeTweens(display);
 			egret.Tween.removeTweens(self);
-			this.shape.graphics.clear();
+			self.lineShape.graphics.clear();
 			//添加方形刚体
 			var positionX: number = display.x / self.factor;
 			var positionY: number = (egret.MainContext.instance.stage.stageHeight - display.y) / self.factor;
@@ -80,13 +92,15 @@ class MainPanel extends egret.DisplayObjectContainer {
 
 			//物理系中的旋转用的弧度
 			boxBody.angle = 2 * Math.PI - (display.rotation / 180) * Math.PI;
-			console.log("角度===" + display.rotation + "弧度===" + boxBody.angle);
+			// console.log("角度===" + display.rotation + "弧度===" + boxBody.angle);
 			boxBody.displays = [display];
 
 			setTimeout(() => {
 				addBlock();
+				self.stage.addEventListener(egret.TouchEvent.TOUCH_BEGIN, stopTween, this);
+				self.countScore(world.bodies);
 				// self.y = 25;
-			}, 1500);
+			}, 2000);
 		}
 
 		function addBlock() {
@@ -97,7 +111,7 @@ class MainPanel extends egret.DisplayObjectContainer {
 			display.anchorOffsetX = display.width / 2;
 			display.anchorOffsetY = display.height / 2;
 			display.x = 100;
-			display.y = 400;
+			display.y = 300;
 			display.rotation = 45;
 			self.display = display;
 
@@ -181,12 +195,12 @@ class MainPanel extends egret.DisplayObjectContainer {
 
 	public set fact(value: number) {
 		this.display.x = (1 - value) * (1 - value) * 100 + 2 * value * (1 - value) * 240 + value * value * 380;
-		this.display.y = (1 - value) * (1 - value) * 400 + 2 * value * (1 - value) * 500 + value * value * 400;
+		this.display.y = (1 - value) * (1 - value) * 300 + 2 * value * (1 - value) * 400 + value * value * 300;
 
-		this.shape.graphics.clear();
-		this.shape.graphics.lineStyle(1, 0xfcee5c);
-		this.shape.graphics.moveTo(240, 0);
-		this.shape.graphics.lineTo(this.display.x, this.display.y);
+		this.lineShape.graphics.clear();
+		this.lineShape.graphics.lineStyle(2, 0xfcee5c);
+		this.lineShape.graphics.moveTo(240, 0);
+		this.lineShape.graphics.lineTo(this.display.x, this.display.y);
 	}
 
 	public get fact2(): number {
@@ -194,28 +208,92 @@ class MainPanel extends egret.DisplayObjectContainer {
 	}
 	public set fact2(value: number) {
 		this.display.x = (1 - value) * (1 - value) * 380 + 2 * value * (1 - value) * 240 + value * value * 100;
-		this.display.y = (1 - value) * (1 - value) * 400 + 2 * value * (1 - value) * 500 + value * value * 400;
+		this.display.y = (1 - value) * (1 - value) * 300 + 2 * value * (1 - value) * 400 + value * value * 300;
 
-		this.shape.graphics.clear();
-		this.shape.graphics.lineStyle(1, 0xfcee5c);
-		this.shape.graphics.moveTo(240, 0);
-		this.shape.graphics.lineTo(this.display.x, this.display.y);
+		this.lineShape.graphics.clear();
+		this.lineShape.graphics.lineStyle(1, 0xfcee5c);
+		this.lineShape.graphics.moveTo(240, 0);
+		this.lineShape.graphics.lineTo(this.display.x, this.display.y);
 	}
 
     /**
      * 画绳子
      */
 	private drawLine(): egret.Shape {
-		this.shape = new egret.Shape();
-		// shape.graphics.beginFill(0xff0000);
-		// this.shape.graphics.lineStyle(2, 0x444446);
-		// this.shape.graphics.moveTo(200, 0);
-		// this.shape.graphics.lineTo(100 + this.display.width / 2, 100 - this.display.height / 2);
-		// shape.graphics.endFill();
-		this.addChild(this.shape);
-		return this.shape;
+		this.lineShape = new egret.Shape();
+		this.addChild(this.lineShape);
+		return this.lineShape;
+	}
+
+	/**
+	 * 计算分数
+	 */
+	private countScore(bodys: p2.Body[]) {
+		var tempY: number = 800;
+		var tempScore: number = 1;
+		//找到出去最后一个box的y坐标最小值，因为最后一个可能还在空中
+		for (var i = 0; i < bodys.length - 1; i++) {
+			if (bodys[i].displays[0]) {
+				var y = bodys[i].displays[0].y;
+				if (y < tempY) {
+					tempY = y;
+				}
+			}
+		}
+		tempScore = Math.ceil((800 - tempY) / this.factor);
+		if (this.goldScore < tempScore) {
+			this.goldScore = tempScore;
+		}
+		if (this.goldScore <= 0) {
+			this.goldScore = 1;
+		}
+		this.scoreLabel.text = (String(this.goldScore));
+
+		this.setScore(36);
+	}
+
+	private scoreLabel: egret.TextField;
+	private createScore() {
+		let label: egret.TextField = new egret.TextField();
+		label.text = "0";
+		label.x = 80;
+		label.y = 50;
+		label.size = 50;
+		label.textColor = 0x000000;
+		this.scoreLabel = label;
+		this.addChild(this.scoreLabel);
+	}
+
+	private myGroup: eui.Group;
+	public setScore(num: number) {
+		this.myGroup = new eui.Group();
+		this.myGroup.x = 80;
+		this.myGroup.y = 100;
+		this.myGroup.removeChildren();
+		this.myGroup.layout = new eui.BasicLayout();
+
+		let arr = this.digitize(num);
+		for (let i: number = 0; i < arr.length; i++) {
+			let score: eui.Image = new eui.Image(RES.getRes("score_json." + arr[i]));
+			this.myGroup.addChild(score);
+		}
+
+		let hLayout: eui.HorizontalLayout = new eui.HorizontalLayout();
+		hLayout.paddingTop = 20;
+		hLayout.horizontalAlign = egret.HorizontalAlign.CENTER;
+		this.myGroup.layout = hLayout;   /// 水平布局
+
+		this.addChild(this.myGroup);
 
 	}
 
-	private shape: egret.Shape;
+	private digitize(num: number) {
+		let str = num + "";
+		let arr = [];
+		str.split("").forEach(function (item) {
+			arr.push(parseInt(item));
+		})
+		return arr;
+	}
+
 }
