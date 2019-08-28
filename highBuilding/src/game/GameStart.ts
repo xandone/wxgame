@@ -12,16 +12,37 @@ class GameStart extends egret.DisplayObjectContainer {
 		box.height = 50;
 		box.x = 50;
 		box.y = -50;
-		
+
 		let bg: egret.Bitmap = new egret.Bitmap(RES.getRes("gamebg_png"));
 		this.addChild(bg);
 
 		this.addChild(box);
 
-		this.startAnim(box);
+		this.startAnim1(box);
 	}
 
-	private startAnim(box: egret.Bitmap) {
+	/**
+	 *
+	 */
+	private startAnim1(box: egret.Bitmap) {
+		egret.Tween.get(box, { loop: false }).to({ y: 750 }, 1400, egret.Ease.cubicInOut).call(() => {
+
+		});
+	}
+
+	private startAnim2(box: egret.Bitmap) {
+		egret.Tween.get(box, { loop: false }).to({ y: 750 }, 1600, egret.Ease.cubicInOut).call(() => {
+
+		});
+	}
+
+	private startAnim3(box: egret.Bitmap) {
+		egret.Tween.get(box, { loop: false }).to({ y: 750 }, 1800, egret.Ease.cubicInOut).call(() => {
+
+		});
+	}
+
+	private startAnim4(box: egret.Bitmap) {
 		egret.Tween.get(box, { loop: false }).to({ y: 750 }, 2000, egret.Ease.cubicInOut).call(() => {
 
 		});
