@@ -85,7 +85,7 @@ class Main extends egret.DisplayObjectContainer {
         Constant.stageH = this.height;
 
         SceneManager.instance.setStage(this);
-        SceneManager.addScene(SceneManager.instance._gameMain);
+        SceneManager.addScene(SceneManager.instance._gameStart);
 
     }
 

@@ -2,9 +2,11 @@ class SceneManager {
     /**根场景 */
     public _stage: egret.DisplayObjectContainer;
     public _gameMain: GameMain;
+    public _gameStart: GameStart;
 
     constructor() {
         this._gameMain = new GameMain();
+        this._gameStart = new GameStart();
     }
 
     /**实例对象 */
@@ -81,7 +83,7 @@ class SceneManager {
     }
 
     static findMax() {
-        
+
     }
 
 }

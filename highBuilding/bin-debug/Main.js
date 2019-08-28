@@ -86,7 +86,7 @@ var Main = (function (_super) {
         Constant.stageW = this.width;
         Constant.stageH = this.height;
         SceneManager.instance.setStage(this);
-        SceneManager.addScene(SceneManager.instance._gameMain);
+        SceneManager.addScene(SceneManager.instance._gameStart);
     };
     return Main;
 }(egret.DisplayObjectContainer));

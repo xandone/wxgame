@@ -221,35 +221,46 @@ var MainPanel = (function (_super) {
         if (this.goldScore <= 0) {
             this.goldScore = 1;
         }
-        this.scoreLabel.text = (String(this.goldScore));
-        this.setScore(36);
+        this.scoreLabel.text = (String(101 - bodys.length));
+        this.setScore(this.goldScore, this.myGroup);
     };
     MainPanel.prototype.createScore = function () {
+        var labelIc = new egret.Bitmap(RES.getRes("allgold_png"));
         var label = new egret.TextField();
-        label.text = "0";
-        label.x = 80;
-        label.y = 50;
-        label.size = 50;
-        label.textColor = 0x000000;
+        label.text = "100";
+        label.size = 26;
+        label.x = 35;
+        label.y = 3;
+        label.textColor = 0xfff000;
         this.scoreLabel = label;
         this.addChild(this.scoreLabel);
-    };
-    MainPanel.prototype.setScore = function (num) {
         this.myGroup = new eui.Group();
-        this.myGroup.x = 80;
-        this.myGroup.y = 100;
+        this.myGroup.x = 50;
+        this.myGroup.y = 30;
         this.myGroup.removeChildren();
         this.myGroup.layout = new eui.BasicLayout();
+        this.allGoldGroup = new eui.Group();
+        this.allGoldGroup.x = 360;
+        this.allGoldGroup.y = 30;
+        this.allGoldGroup.removeChildren();
+        this.allGoldGroup.layout = new eui.BasicLayout();
+        var hLayout = new eui.HorizontalLayout();
+        hLayout.horizontalAlign = egret.HorizontalAlign.CENTER;
+        this.myGroup.layout = hLayout; /// 水平布局
+        this.allGoldGroup.layout = hLayout;
+        this.allGoldGroup.addChild(labelIc);
+        this.allGoldGroup.addChild(label);
+        this.addChild(this.myGroup);
+        this.addChild(this.allGoldGroup);
+        this.setScore(0, this.myGroup);
+    };
+    MainPanel.prototype.setScore = function (num, group) {
+        group.removeChildren();
         var arr = this.digitize(num);
         for (var i = 0; i < arr.length; i++) {
             var score = new eui.Image(RES.getRes("score_json." + arr[i]));
-            this.myGroup.addChild(score);
+            group.addChild(score);
         }
-        var hLayout = new eui.HorizontalLayout();
-        hLayout.paddingTop = 20;
-        hLayout.horizontalAlign = egret.HorizontalAlign.CENTER;
-        this.myGroup.layout = hLayout; /// 水平布局
-        this.addChild(this.myGroup);
     };
     MainPanel.prototype.digitize = function (num) {
         var str = num + "";

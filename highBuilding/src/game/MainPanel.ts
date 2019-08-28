@@ -247,43 +247,60 @@ class MainPanel extends egret.DisplayObjectContainer {
 		if (this.goldScore <= 0) {
 			this.goldScore = 1;
 		}
-		this.scoreLabel.text = (String(this.goldScore));
 
-		this.setScore(36);
+		this.scoreLabel.text = (String(101 - bodys.length));
+		this.setScore(this.goldScore, this.myGroup);
 	}
 
-	private scoreLabel: egret.TextField;
+
 	private createScore() {
+		let labelIc: egret.Bitmap = new egret.Bitmap(RES.getRes("allgold_png"));
 		let label: egret.TextField = new egret.TextField();
-		label.text = "0";
-		label.x = 80;
-		label.y = 50;
-		label.size = 50;
-		label.textColor = 0x000000;
+		label.text = "100";
+		label.size = 26;
+		label.x = 35;
+		label.y = 3;
+		label.textColor = 0xfff000;
 		this.scoreLabel = label;
 		this.addChild(this.scoreLabel);
-	}
 
-	private myGroup: eui.Group;
-	public setScore(num: number) {
 		this.myGroup = new eui.Group();
-		this.myGroup.x = 80;
-		this.myGroup.y = 100;
+		this.myGroup.x = 50;
+		this.myGroup.y = 30;
 		this.myGroup.removeChildren();
 		this.myGroup.layout = new eui.BasicLayout();
 
+		this.allGoldGroup = new eui.Group();
+		this.allGoldGroup.x = 360;
+		this.allGoldGroup.y = 30;
+		this.allGoldGroup.removeChildren();
+		this.allGoldGroup.layout = new eui.BasicLayout();
+
+		let hLayout: eui.HorizontalLayout = new eui.HorizontalLayout();
+		hLayout.horizontalAlign = egret.HorizontalAlign.CENTER;
+		this.myGroup.layout = hLayout;   /// 水平布局
+		this.allGoldGroup.layout = hLayout;
+
+		this.allGoldGroup.addChild(labelIc);
+		this.allGoldGroup.addChild(label);
+
+		this.addChild(this.myGroup);
+		this.addChild(this.allGoldGroup);
+
+		this.setScore(0, this.myGroup);
+	}
+
+	private scoreLabel: egret.TextField;
+	private myGroup: eui.Group;
+	private allGoldGroup: eui.Group;
+
+	public setScore(num: number, group: eui.Group) {
+		group.removeChildren();
 		let arr = this.digitize(num);
 		for (let i: number = 0; i < arr.length; i++) {
 			let score: eui.Image = new eui.Image(RES.getRes("score_json." + arr[i]));
-			this.myGroup.addChild(score);
+			group.addChild(score);
 		}
-
-		let hLayout: eui.HorizontalLayout = new eui.HorizontalLayout();
-		hLayout.paddingTop = 20;
-		hLayout.horizontalAlign = egret.HorizontalAlign.CENTER;
-		this.myGroup.layout = hLayout;   /// 水平布局
-
-		this.addChild(this.myGroup);
 
 	}
 

@@ -4,6 +4,7 @@ var __reflect = (this && this.__reflect) || function (p, c, t) {
 var SceneManager = (function () {
     function SceneManager() {
         this._gameMain = new GameMain();
+        this._gameStart = new GameStart();
     }
     Object.defineProperty(SceneManager, "instance", {
         /**获取实例 */
