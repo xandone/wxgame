@@ -27,62 +27,79 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-class Main extends egret.DisplayObjectContainer {
+class Main extends eui.UILayer {
 
-    /**
-     * 加载进度界面
-     */
-    private loadingView: LoadingUI;
+    protected createChildren(): void {
+        super.createChildren();
 
-    public constructor() {
-        super();
-        this.addEventListener(egret.Event.ADDED_TO_STAGE, this.onAddToStage, this);
+        egret.lifecycle.addLifecycleListener((context) => {
+            // custom lifecycle plugin
+        })
+
+        egret.lifecycle.onPause = () => {
+            egret.ticker.pause();
+        }
+
+        egret.lifecycle.onResume = () => {
+            egret.ticker.resume();
+        }
+
+        //inject the custom material parser
+        //注入自定义的素材解析器
+        let assetAdapter = new AssetAdapter();
+        egret.registerImplementation("eui.IAssetAdapter", assetAdapter);
+        egret.registerImplementation("eui.IThemeAdapter", new ThemeAdapter());
+
+
+        this.runGame().catch(e => {
+            console.log(e);
+        })
     }
 
-    private onAddToStage(event: egret.Event) {
-        //设置加载进度界面
-        this.loadingView = new LoadingUI();
-        this.stage.addChild(this.loadingView);
+    private async runGame() {
+        await this.loadResource()
+        this.createGameScene();
+        const result = await RES.getResAsync("description_json")
+        await platform.login();
+        const userInfo = await platform.getUserInfo();
+        console.log(userInfo);
 
-        //初始化Resource资源加载库
-        RES.addEventListener(RES.ResourceEvent.CONFIG_COMPLETE, this.onConfigComplete, this);
-        RES.loadConfig("resource/default.res.json", "resource/");
     }
-    /**
-     * 配置文件加载完成,开始预加载preload资源组。
-     */
-    private onConfigComplete(event: RES.ResourceEvent): void {
-        RES.removeEventListener(RES.ResourceEvent.CONFIG_COMPLETE, this.onConfigComplete, this);
-        RES.addEventListener(RES.ResourceEvent.GROUP_COMPLETE, this.onResourceLoadComplete, this);
-        RES.addEventListener(RES.ResourceEvent.GROUP_PROGRESS, this.onResourceProgress, this);
-        RES.loadGroup("preload");
-    }
-    /**
-     * preload资源组加载完成
-     */
-    private onResourceLoadComplete(event: RES.ResourceEvent): void {
-        if (event.groupName == "preload") {
-            this.stage.removeChild(this.loadingView);
-            RES.removeEventListener(RES.ResourceEvent.GROUP_COMPLETE, this.onResourceLoadComplete, this);
-            RES.removeEventListener(RES.ResourceEvent.GROUP_PROGRESS, this.onResourceProgress, this);
-            this.createGameScene();
+
+    private async loadResource() {
+        try {
+            const loadingView = new LoadingUI();
+            this.stage.addChild(loadingView);
+            await RES.loadConfig("resource/default.res.json", "resource/");
+            await this.loadTheme();
+            await RES.loadGroup("preload", 0, loadingView);
+            this.stage.removeChild(loadingView);
+        }
+        catch (e) {
+            console.error(e);
         }
     }
-    /**
-     * preload资源组加载进度
-     */
-    private onResourceProgress(event: RES.ResourceEvent): void {
-        if (event.groupName == "preload") {
-            this.loadingView.setProgress(event.itemsLoaded, event.itemsTotal);
-        }
+
+    private loadTheme() {
+        return new Promise((resolve, reject) => {
+            // load skin theme configuration file, you can manually modify the file. And replace the default skin.
+            //加载皮肤主题配置文件,可以手动修改这个文件。替换默认皮肤。
+            let theme = new eui.Theme("resource/default.thm.json", this.stage);
+            theme.addEventListener(eui.UIEvent.COMPLETE, () => {
+                resolve();
+            }, this);
+
+        })
     }
 
+    private textfield: egret.TextField;
     /**
      * 创建游戏场景
      */
     private createGameScene(): void {
         Constant.stageW = this.width;
         Constant.stageH = this.height;
+        console.log(this.width + "  " + Constant.stageH);
 
         SceneManager.instance.setStage(this);
         SceneManager.addScene(SceneManager.instance._gameStart);

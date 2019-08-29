@@ -21,6 +21,8 @@ class MainPanel extends egret.DisplayObjectContainer {
 	private init() {
 		this.removeEventListener(egret.Event.ADDED_TO_STAGE, this.init, this);
 		this.gameBmp = new egret.Bitmap(RES.getRes("gamebg_png"));
+		this.gameBmp.width = Constant.stageW;
+		this.gameBmp.height = Constant.stageH;
 		this.addChild(this.gameBmp);
 		this.createScore();
 		this.init2();

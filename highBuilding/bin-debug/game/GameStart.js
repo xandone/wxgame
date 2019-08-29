@@ -24,8 +24,11 @@ var GameStart = (function (_super) {
     GameStart.prototype.init = function () {
         this.removeEventListener(egret.Event.ADDED_TO_STAGE, this.init, this);
         var bg = new egret.Bitmap(RES.getRes("gamebg_png"));
+        bg.width = Constant.stageW;
+        bg.height = Constant.stageH;
         this.addChild(bg);
         this.initBox();
+        SceneManager.addScene(SceneManager.instance._startPanel);
     };
     GameStart.prototype.initBox = function () {
         var texture = RES.getRes("rect_png");
@@ -113,12 +116,15 @@ var GameStart = (function (_super) {
         }
     };
     /**
-     *
+     *下滑
      */
     GameStart.prototype.startAnim1 = function (box) {
         egret.Tween.get(box, { loop: false }).to({ y: 750 }, 1400, egret.Ease.cubicInOut).call(function () {
         });
     };
+    /**
+     *下滑运动
+     */
     GameStart.prototype.startAnim2 = function (box, endy, interval) {
         egret.Tween.get(box, { loop: false }).to({ y: endy }, interval, egret.Ease.cubicInOut).call(function () {
         });

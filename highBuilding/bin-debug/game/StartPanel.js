@@ -18,9 +18,16 @@ var StartPanel = (function (_super) {
     }
     StartPanel.prototype.init = function () {
         this.removeEventListener(eui.UIEvent.CREATION_COMPLETE, this.init, this);
-        this.start_btn.addEventListener(egret.TouchEvent.TOUCH_TAP, this.start, this);
+        this.btn = new eui.Image(RES.getRes("startbtn_png"));
+        this.btn.width = 160;
+        this.btn.height = 60;
+        this.btn.x = 240 - 80;
+        this.btn.y = 580;
+        this.addChild(this.btn);
+        this.btn.addEventListener(egret.TouchEvent.TOUCH_TAP, this.start, this);
     };
     StartPanel.prototype.start = function () {
+        SceneManager.switchScene(SceneManager.instance._gameMain);
     };
     return StartPanel;
 }(eui.Component));

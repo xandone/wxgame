@@ -15,9 +15,13 @@ class GameStart extends egret.DisplayObjectContainer {
 	private init() {
 		this.removeEventListener(egret.Event.ADDED_TO_STAGE, this.init, this);
 		let bg: egret.Bitmap = new egret.Bitmap(RES.getRes("gamebg_png"));
+		bg.width = Constant.stageW;
+		bg.height = Constant.stageH;
 		this.addChild(bg);
+
 		this.initBox();
 
+		SceneManager.addScene(SceneManager.instance._startPanel);
 	}
 
 	private initBox() {
@@ -32,7 +36,6 @@ class GameStart extends egret.DisplayObjectContainer {
 		this.box1[0] = box;
 		this.addChild(this.box1[0]);
 		this.startAnim1(this.box1[0]);
-
 
 		for (let i = 0; i < 2; i++) {
 			let box: egret.Bitmap = new egret.Bitmap();
@@ -103,7 +106,6 @@ class GameStart extends egret.DisplayObjectContainer {
 			this.startAnim2(box, 750 + this.startY * i, 2600 + i * 200);
 		}
 
-
 		for (let i = 0; i < 8; i++) {
 			let box: egret.Bitmap = new egret.Bitmap();
 			box.texture = texture;
@@ -119,7 +121,7 @@ class GameStart extends egret.DisplayObjectContainer {
 	}
 
 	/**
-	 *
+	 *下滑
 	 */
 	private startAnim1(box: egret.Bitmap) {
 		egret.Tween.get(box, { loop: false }).to({ y: 750 }, 1400, egret.Ease.cubicInOut).call(() => {
@@ -127,6 +129,9 @@ class GameStart extends egret.DisplayObjectContainer {
 		});
 	}
 
+	/**
+	 *下滑运动
+	 */
 	private startAnim2(box: egret.Bitmap, endy: number, interval: number) {
 		egret.Tween.get(box, { loop: false }).to({ y: endy }, interval, egret.Ease.cubicInOut).call(() => {
 

@@ -3,10 +3,12 @@ class SceneManager {
     public _stage: egret.DisplayObjectContainer;
     public _gameMain: GameMain;
     public _gameStart: GameStart;
+    public _startPanel: StartPanel;
 
     constructor() {
-        this._gameMain = new GameMain();
         this._gameStart = new GameStart();
+        this._startPanel = new StartPanel();
+        this._gameMain = new GameMain();
     }
 
     /**实例对象 */
