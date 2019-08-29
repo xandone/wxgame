@@ -10,15 +10,16 @@
 		"libs/modules/physics/physics.js"
 	],
 	"game": [
+		"bin-debug/game/Constant.js",
 		"bin-debug/AssetAdapter.js",
-		"bin-debug/LoadingUI.js",
 		"bin-debug/Main.js",
 		"bin-debug/Platform.js",
 		"bin-debug/ThemeAdapter.js",
-		"bin-debug/game/Constant.js",
+		"bin-debug/LoadingUI.js",
 		"bin-debug/game/GameMain.js",
 		"bin-debug/game/GameStart.js",
 		"bin-debug/game/MainPanel.js",
-		"bin-debug/game/SceneManager.js"
+		"bin-debug/game/SceneManager.js",
+		"bin-debug/game/StartPanel.js"
 	]
 }

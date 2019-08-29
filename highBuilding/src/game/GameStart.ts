@@ -1,5 +1,8 @@
 class GameStart extends egret.DisplayObjectContainer {
-private  _startPanel:StartPanel;
+	private box1: egret.Bitmap[] = [];
+	private box2: egret.Bitmap[] = [];
+	private box3: egret.Bitmap[] = [];
+	private box4: egret.Bitmap[] = [];
 
 	private startX: number = 50;
 	private startY: number = -50;
