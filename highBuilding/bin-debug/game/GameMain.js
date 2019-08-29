@@ -24,3 +24,4 @@ var GameMain = (function (_super) {
     return GameMain;
 }(egret.DisplayObjectContainer));
 __reflect(GameMain.prototype, "GameMain");
+//# sourceMappingURL=GameMain.js.map

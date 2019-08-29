@@ -273,3 +273,4 @@ var MainPanel = (function (_super) {
     return MainPanel;
 }(egret.DisplayObjectContainer));
 __reflect(MainPanel.prototype, "MainPanel");
+//# sourceMappingURL=MainPanel.js.map
