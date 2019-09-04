@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin width="800" height="480" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing">
+	<e:Rect left="0" right="0" top="0" bottom="0" fillAlpha="1" strokeAlpha="1" fillColor="0xffffff" />
+	<e:Label text="GAME OVER" textColor="0x000000" size="45" x="277" y="40.67"></e:Label>
+	<e:Button id="restart_btn" x="323" y="345" width="200" height="70">
+		<e:skinName>
+			<e:Skin states="up,down,disable">
+				<e:Image width="100%" height="100%" source="restart_png" />
+				<e:Label id="lableDisplay" horizontalCenter="0" verticalCenter="0" />
+			</e:Skin>
+		</e:skinName>
+	</e:Button>
+</e:Skin>

@@ -5,6 +5,7 @@ var SceneManager = (function () {
     function SceneManager() {
         this._gameMap = new GameMap();
         this._gameMain = new GameMain();
+        this._gameOver = new GameOver();
     }
     Object.defineProperty(SceneManager, "instance", {
         /**获取实例 */

@@ -1,7 +1,6 @@
 class GameMain extends egret.DisplayObjectContainer {
     private bombMc: egret.MovieClip;
     private bomnMcY: number;
-    private isGameOver;
     private hero: egret.Bitmap;
     private lifebuoy: egret.Bitmap;
     private lineShape: egret.Shape;
@@ -300,8 +299,18 @@ class GameMain extends egret.DisplayObjectContainer {
             this.start();
             if (this.humanArr.length <= 0) {
                 this.isGameOver = true;
+                this.gameOver();
             }
         }
+    }
+
+    private gameOver() {
+        if (this.isGameOver) {
+            SceneManager.addScene(new GameOver(), this);
+            egret.Tween.removeTweens(this);
+            this.stage.removeEventListener(egret.TouchEvent.TOUCH_BEGIN, this.stopTween, this);
+        }
+
     }
 
 

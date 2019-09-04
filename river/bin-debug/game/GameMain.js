@@ -268,6 +268,17 @@ var GameMain = (function (_super) {
             this.lifebuoy.visible = true;
             this.lineShape.visible = true;
             this.start();
+            if (this.humanArr.length <= 0) {
+                this.isGameOver = true;
+                this.gameOver();
+            }
+        }
+    };
+    GameMain.prototype.gameOver = function () {
+        if (this.isGameOver) {
+            SceneManager.addScene(new GameOver(), this);
+            egret.Tween.removeTweens(this);
+            this.stage.removeEventListener(egret.TouchEvent.TOUCH_BEGIN, this.stopTween, this);
         }
     };
     Object.defineProperty(GameMain.prototype, "fact", {
