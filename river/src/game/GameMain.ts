@@ -15,6 +15,8 @@ class GameMain extends egret.DisplayObjectContainer {
     private pullHumanScale: number;
     private humanArr: Human[] = [];
     private pullMan: Human;
+    private pullManIndex: number;
+    private isGameOver: boolean;
 
     public constructor() {
         super();
@@ -54,10 +56,24 @@ class GameMain extends egret.DisplayObjectContainer {
     }
 
     private initHuman() {
-        let human = new Human();
-        human.create("self_png");
-        this.addChild(human);
-        this.humanArr.push(human);
+        let human1 = new Human();
+        human1.create("self_png");
+
+        let human2 = new Human();
+        human2.create("self_png");
+
+        if (Math.abs(human1.x - human2.x) < human1.width) {
+            if (human1.x < Constant.stageW / 2) {
+                human2.x = human1.x + human1.width + 50;
+            } else {
+                human2.x = human1.x - human1.width - 50
+            }
+        }
+
+        this.addChild(human1);
+        this.addChild(human2);
+        this.humanArr.push(human1);
+        this.humanArr.push(human2);
     }
 
     private initLifebuoy() {
@@ -142,20 +158,25 @@ class GameMain extends egret.DisplayObjectContainer {
         this.lineShape.graphics.moveTo(this.hero.x + 50, this.hero.y + this.hero.height / 2 + 2);
         this.lineShape.graphics.lineTo(this.lifebuoy.x + this.lifebuoy.width / 2, this.lifebuoy.y + 20);
 
-        if (SceneManager.rescuedTest(this.lifebuoy, this.humanArr[0])) {
-            this.removeEventListener(egret.Event.ENTER_FRAME, this.movingLife, this);
-            this.humanArr[0].switchChild();
+        for (let i: number = 0; i < this.humanArr.length; i++) {
+            if (SceneManager.rescuedTest(this.lifebuoy, this.humanArr[i])) {
+                this.removeEventListener(egret.Event.ENTER_FRAME, this.movingLife, this);
+                this.humanArr[i].switchChild();
 
-            this.lifebuoy.visible = false;
+                this.lifebuoy.visible = false;
 
-            this.lineShape.graphics.clear();
-            this.lineShape.graphics.lineStyle(1, 0x393B3A);
-            this.lineShape.graphics.moveTo(this.hero.x + 50, this.hero.y + this.hero.height / 2 + 2);
-            this.lineShape.graphics.lineTo(this.humanArr[0].x + this.humanArr[0].width / 2, this.humanArr[0].y + 50);
-            this.stillnessX = this.humanArr[0].x + this.humanArr[0].width / 2;
-            this.stillnessY = this.humanArr[0].y + 50;
+                this.lineShape.graphics.clear();
+                this.lineShape.graphics.lineStyle(1, 0x393B3A);
+                this.lineShape.graphics.moveTo(this.hero.x + 50, this.hero.y + this.hero.height / 2 + 2);
+                this.lineShape.graphics.lineTo(this.humanArr[i].x + this.humanArr[i].width / 2, this.humanArr[i].y + 50);
+                this.stillnessX = this.humanArr[i].x + this.humanArr[i].width / 2;
+                this.stillnessY = this.humanArr[i].y + 50;
 
-            this.startPullHuman();
+                this.pullMan = this.humanArr[i];
+                this.pullManIndex = i;
+                this.startPullHuman();
+                break;
+            }
         }
 
         //出界
@@ -168,7 +189,9 @@ class GameMain extends egret.DisplayObjectContainer {
 
     }
 
-
+    /**
+     * 没有捞到人，拉回救生圈
+     */
     private movingLifePull() {
         let speedy: number;
         if (this.scalePush > 1) {
@@ -209,8 +232,10 @@ class GameMain extends egret.DisplayObjectContainer {
         }
     }
 
+    /**
+     * 准备拉人
+     */
     private startPullHuman() {
-        this.pullMan = this.humanArr[0];
         this.addEventListener(egret.Event.ENTER_FRAME, this.pullHuman, this);
 
         let x = Math.abs(this.stillnessX - (this.hero.x + 50));
@@ -220,6 +245,9 @@ class GameMain extends egret.DisplayObjectContainer {
 
     }
 
+    /**
+     * 拉人上岸
+     */
     private pullHuman() {
         let speedy: number;
         if (this.pullHumanScale > 1) {
@@ -254,13 +282,27 @@ class GameMain extends egret.DisplayObjectContainer {
 
         if (this.pullMan.y <= this.hero.y) {
             this.removeEventListener(egret.Event.ENTER_FRAME, this.pullHuman, this);
-            this.pullMan.x = this.hero.x + this.hero.width;
+            if (this.humanArr.length > 1) {
+                this.pullMan.x = this.hero.x + this.hero.width;
+            } else {
+                this.pullMan.x = this.hero.x + this.hero.width * 2;
+            }
+
             this.pullMan.y = this.hero.y;
             this.lineShape.visible = false;
+            this.humanArr.splice(this.pullManIndex, 1);
 
+            //就上一个人后重置到初始状态
+            this.lifebuoy.x = this.swingx[0];
+            this.lifebuoy.y = this.swingy[0];
+            this.lifebuoy.visible = true;
+            this.lineShape.visible = true;
+            this.start();
+            if (this.humanArr.length <= 0) {
+                this.isGameOver = true;
+            }
         }
     }
-
 
 
     public get fact(): number {
