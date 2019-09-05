@@ -25,7 +25,6 @@ var GameMain = (function (_super) {
         this.createMain();
     };
     GameMain.prototype.createMain = function () {
-        this.touchEnabled = true;
         this.initMap();
         this.initSelf();
         this.initHuman();
@@ -293,7 +292,6 @@ var GameMain = (function (_super) {
     };
     GameMain.prototype.gameOver = function () {
         if (this.isGameOver) {
-            this.touchEnabled = false;
             this.stage.removeEventListener(egret.TouchEvent.TOUCH_BEGIN, this.stopTween, this);
             egret.Tween.removeTweens(this);
             SceneManager.addScene(new GameOver(), this);
