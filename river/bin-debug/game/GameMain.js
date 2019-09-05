@@ -25,6 +25,7 @@ var GameMain = (function (_super) {
         this.createMain();
     };
     GameMain.prototype.createMain = function () {
+        this.touchEnabled = true;
         this.initMap();
         this.initSelf();
         this.initHuman();
@@ -211,6 +212,9 @@ var GameMain = (function (_super) {
      */
     GameMain.prototype.startPullHuman = function () {
         this.addEventListener(egret.Event.ENTER_FRAME, this.pullHuman, this);
+        if (this.humanArr.length == 1) {
+            this.removeEventListener(egret.Event.ENTER_FRAME, this.washaway, this);
+        }
         var x = Math.abs(this.stillnessX - (this.hero.x + 50));
         var y = this.stillnessY - (this.hero.y + this.hero.height / 2 + 2);
         this.pullHumanScale = y / x;
@@ -262,13 +266,26 @@ var GameMain = (function (_super) {
             this.pullMan.y = this.hero.y;
             this.lineShape.visible = false;
             this.humanArr.splice(this.pullManIndex, 1);
-            //就上一个人后重置到初始状态
+            //救上人后重置到初始状态
             this.lifebuoy.x = this.swingx[0];
             this.lifebuoy.y = this.swingy[0];
             this.lifebuoy.visible = true;
             this.lineShape.visible = true;
             this.start();
+            if (this.humanArr.length == 1) {
+                this.addEventListener(egret.Event.ENTER_FRAME, this.washaway, this);
+            }
             if (this.humanArr.length <= 0) {
+                this.isGameOver = true;
+                this.gameOver();
+            }
+        }
+    };
+    GameMain.prototype.washaway = function () {
+        if (this.humanArr[0]) {
+            this.humanArr[0].x += this.moveSpeed;
+            if (this.humanArr[0].x >= Constant.stageW) {
+                this.removeEventListener(egret.Event.ENTER_FRAME, this.washaway, this);
                 this.isGameOver = true;
                 this.gameOver();
             }
@@ -276,10 +293,18 @@ var GameMain = (function (_super) {
     };
     GameMain.prototype.gameOver = function () {
         if (this.isGameOver) {
-            SceneManager.addScene(new GameOver(), this);
-            egret.Tween.removeTweens(this);
+            this.touchEnabled = false;
             this.stage.removeEventListener(egret.TouchEvent.TOUCH_BEGIN, this.stopTween, this);
+            egret.Tween.removeTweens(this);
+            SceneManager.addScene(new GameOver(), this);
         }
+    };
+    GameMain.prototype.restart = function () {
+        this.isGameOver = false;
+        this.isSwingRight = true;
+        this.humanArr = [];
+        this.removeChildren();
+        this.createMain();
     };
     Object.defineProperty(GameMain.prototype, "fact", {
         get: function () {
